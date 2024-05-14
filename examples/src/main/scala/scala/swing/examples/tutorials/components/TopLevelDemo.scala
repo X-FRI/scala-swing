@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 
 /**
  * Tutorial: Using Top-Level Containers
@@ -41,28 +41,24 @@ import scala.swing._
  * 
  * TopLevelDemo.scala requires no other files.
  */
-object TopLevelDemo extends SimpleSwingApplication {
-    lazy val top = new MainFrame() {
-      title = "TopLevelDemo"
-        
-      //Create the menu bar.  Make it have a green background.
-      val greenMenuBar: MenuBar = new MenuBar() {
-        opaque = true
-        background = new Color(154, 165, 127)
-        preferredSize = new Dimension(200, 20)
-      }
-      
-      //Create a yellow label to put in the content pane.
-      val yellowlabel = new Label("Hello World") {
-        opaque = true
-        background = new Color(248, 213, 131)
-        preferredSize = new Dimension(200, 180)
-      }
-      
-      //Set the menu bar and add the label to the content pane.
-      menuBar = greenMenuBar
-      contents = new BorderPanel {
-        layout(yellowlabel) = BorderPanel.Position.Center
-      }
-    }
-}
+object TopLevelDemo extends SimpleSwingApplication:
+    lazy val top = new MainFrame():
+        title = "TopLevelDemo"
+
+        // Create the menu bar.  Make it have a green background.
+        val greenMenuBar: MenuBar = new MenuBar():
+            opaque = true
+            background = new Color(154, 165, 127)
+            preferredSize = new Dimension(200, 20)
+
+        // Create a yellow label to put in the content pane.
+        val yellowlabel = new Label("Hello World"):
+            opaque = true
+            background = new Color(248, 213, 131)
+            preferredSize = new Dimension(200, 180)
+
+        // Set the menu bar and add the label to the content pane.
+        menuBar = greenMenuBar
+        contents = new BorderPanel:
+            layout(yellowlabel) = BorderPanel.Position.Center
+end TopLevelDemo

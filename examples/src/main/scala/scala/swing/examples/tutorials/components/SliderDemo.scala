@@ -36,7 +36,7 @@ import java.awt.event.{ActionEvent, ActionListener}
 
 import javax.swing.{ImageIcon, Timer}
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.{ValueChanged, WindowDeiconified, WindowIconified}
 
 /**
@@ -49,131 +49,125 @@ import scala.swing.event.{ValueChanged, WindowDeiconified, WindowIconified}
  * SliderDemo.scala requires all the files in the /scala/swing/examples/tutorials/images/doggy
  * directory.
  */
-class SliderDemo(window: Window) extends BoxPanel(Orientation.Vertical) with ActionListener {
-  // Set up animation parameters.
-  val FpsMin      =  0
-  val FpsMax      = 30
-  val FpsInit     = 15 // initial frames per second
-  var frameNumber =  0
-  val NumFrames   = 14
+class SliderDemo(window: Window) extends BoxPanel(Orientation.Vertical) with ActionListener:
+    // Set up animation parameters.
+    val FpsMin      = 0
+    val FpsMax      = 30
+    val FpsInit     = 15 // initial frames per second
+    var frameNumber = 0
+    val NumFrames   = 14
 
-  val images      = new Array[Option[ImageIcon]](NumFrames)
-  var frozen      = false
-  var delay: Int  = 1000 / FpsInit
+    val images     = new Array[Option[ImageIcon]](NumFrames)
+    var frozen     = false
+    var delay: Int = 1000 / FpsInit
 
-  val sliderLabel: Label = new Label("Frames Per Second") {
-    horizontalAlignment = Alignment.Center
-    xLayoutAlignment = java.awt.Component.CENTER_ALIGNMENT
-  }
+    val sliderLabel: Label = new Label("Frames Per Second"):
+        horizontalAlignment = Alignment.Center
+        xLayoutAlignment = java.awt.Component.CENTER_ALIGNMENT
 
-  val framesPerSecond: Slider = new Slider {
-    orientation = Orientation.Horizontal
-    min = FpsMin
-    max = FpsMax
-    value = FpsInit
-    // Turn on labels at major tick marks.
-    majorTickSpacing = 10
-    minorTickSpacing = 1
-    paintTicks = true
-    paintLabels = true
-    border = Swing.EmptyBorder(0, 0, 10, 0)
-    font = new Font("Serif", Font.ITALIC, 15)
-  }
+    val framesPerSecond: Slider = new Slider:
+        orientation = Orientation.Horizontal
+        min = FpsMin
+        max = FpsMax
+        value = FpsInit
+        // Turn on labels at major tick marks.
+        majorTickSpacing = 10
+        minorTickSpacing = 1
+        paintTicks = true
+        paintLabels = true
+        border = Swing.EmptyBorder(0, 0, 10, 0)
+        font = new Font("Serif", Font.ITALIC, 15)
 
-  val picture: Label = new Label() {
-    horizontalAlignment = Alignment.Center
-    xLayoutAlignment    = java.awt.Component.CENTER_ALIGNMENT
+    val picture: Label = new Label():
+        horizontalAlignment = Alignment.Center
+        xLayoutAlignment = java.awt.Component.CENTER_ALIGNMENT
 
-    border = Swing.CompoundBorder(
-      Swing.BeveledBorder(Swing.Lowered), Swing.EmptyBorder(10, 10, 10, 10))
-  }
+        border = Swing.CompoundBorder(
+            Swing.BeveledBorder(Swing.Lowered), Swing.EmptyBorder(10, 10, 10, 10))
 
-  updatePicture(0) // display first frame
-  contents += sliderLabel
-  contents += framesPerSecond
-  contents += picture
-  border = Swing.EmptyBorder(10, 10, 10, 10)
+    updatePicture(0) // display first frame
+    contents += sliderLabel
+    contents += framesPerSecond
+    contents += picture
+    border = Swing.EmptyBorder(10, 10, 10, 10)
 
-  // Set up a timer that calls this object's action handler.
-  val timer = new Timer(delay, this)
-  timer.setInitialDelay(delay * 7) // We pause animation twice per cycle
-  // by restarting the timer
-  timer.setCoalesce(true)
+    // Set up a timer that calls this object's action handler.
+    val timer = new Timer(delay, this)
+    timer.setInitialDelay(delay * 7) // We pause animation twice per cycle
+    // by restarting the timer
+    timer.setCoalesce(true)
 
-  listenTo(framesPerSecond)
-  listenTo(window)
-  reactions += {
-    case ValueChanged(`framesPerSecond`) =>
-      if (!framesPerSecond.adjusting) {
-        val fps: Int = framesPerSecond.value
-        if (fps == 0) {
-          if (!frozen) stopAnimation()
-        } else {
-          delay = 1000 / fps
-          timer.setDelay(delay)
-          timer.setInitialDelay(delay * 10)
-          if (frozen) startAnimation()
-        }
-      }
-    case WindowIconified  (`window`) => stopAnimation()
-    case WindowDeiconified(`window`) => startAnimation()
-  }
-
-  startAnimation()
-
-  def startAnimation(): Unit = {
-    // Start (or restart) animating!
-    timer.start()
-    frozen = false
-  }
-
-  def stopAnimation(): Unit = {
-    // Stop the animating thread.
-    timer.stop()
-    frozen = true
-  }
-
-  // Called when the Timer fires.
-  def actionPerformed(e: ActionEvent): Unit = {
-    // Advance the animation frame.
-    frameNumber = if (frameNumber == (NumFrames - 1)) 0 else frameNumber + 1
-
-    updatePicture(frameNumber) //display the next picture
-
-    if (frameNumber == (NumFrames - 1) || frameNumber == (NumFrames / 2 - 1)) {
-      timer.restart()
-    }
-  }
-
-  /** Update the label to display the image for the current frame. */
-  def updatePicture(frameNum: Int): Unit = {
-    // Get the image if we haven't already.
-    if (images(frameNum) == null) {
-      images(frameNum) = SliderDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/doggy/T$frameNumber.gif")
+    listenTo(framesPerSecond)
+    listenTo(window)
+    reactions += {
+        case ValueChanged(`framesPerSecond`) =>
+            if !framesPerSecond.adjusting then
+                val fps: Int = framesPerSecond.value
+                if fps == 0 then
+                    if !frozen then stopAnimation()
+                else {
+                    delay = 1000 / fps
+                    timer.setDelay(delay)
+                    timer.setInitialDelay(delay * 10)
+                    if frozen then startAnimation()
+                }
+                end if
+        case WindowIconified(`window`)   => stopAnimation()
+        case WindowDeiconified(`window`) => startAnimation()
     }
 
-    // Set the image.
-    images(frameNum) match {
-      case Some(frm)  => picture.icon = frm
-      case None       => picture.text = s"image #$frameNumber not found"
-    }
+    startAnimation()
 
-    // On some operating systems refresh is slow unless input devices (mouse, keyboard) are used.
-    // Ensure picture is repainted fast.
-    picture.toolkit.sync()
-  }
-}
+    def startAnimation(): Unit =
+        // Start (or restart) animating!
+        timer.start()
+        frozen = false
+    end startAnimation
 
-object SliderDemo extends SimpleSwingApplication {
-  // TD UIManager.put("swing.boldMetal", false)
-  /** Returns an ImageIcon, or null if the path was invalid. */
-  def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+    def stopAnimation(): Unit =
+        // Stop the animating thread.
+        timer.stop()
+        frozen = true
+    end stopAnimation
 
-  object top extends MainFrame() {
-    title = "SliderDemo"
-    // Create and set up the content pane.
-    contents = new SliderDemo(this)
-  }
-}
+    // Called when the Timer fires.
+    def actionPerformed(e: ActionEvent): Unit =
+        // Advance the animation frame.
+        frameNumber = if frameNumber == (NumFrames - 1) then 0 else frameNumber + 1
 
+        updatePicture(frameNumber) // display the next picture
+
+        if frameNumber == (NumFrames - 1) || frameNumber == (NumFrames / 2 - 1) then
+            timer.restart()
+    end actionPerformed
+
+    /** Update the label to display the image for the current frame. */
+    def updatePicture(frameNum: Int): Unit =
+        // Get the image if we haven't already.
+        if images(frameNum) == null then
+            images(frameNum) =
+                SliderDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/doggy/T$frameNumber.gif")
+
+        // Set the image.
+        images(frameNum) match
+            case Some(frm) => picture.icon = frm
+            case None      => picture.text = s"image #$frameNumber not found"
+
+        // On some operating systems refresh is slow unless input devices (mouse, keyboard) are used.
+        // Ensure picture is repainted fast.
+        picture.toolkit.sync()
+    end updatePicture
+end SliderDemo
+
+object SliderDemo extends SimpleSwingApplication:
+    // TD UIManager.put("swing.boldMetal", false)
+    /** Returns an ImageIcon, or null if the path was invalid. */
+    def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+
+    object top extends MainFrame():
+        title = "SliderDemo"
+        // Create and set up the content pane.
+        contents = new SliderDemo(this)
+    end top
+end SliderDemo

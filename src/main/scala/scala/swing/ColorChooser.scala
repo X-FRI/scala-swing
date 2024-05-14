@@ -13,8 +13,8 @@
 package scala.swing
 
 import javax.swing.JColorChooser
-import scala.swing.event._
-import scala.swing.Swing._
+import scala.swing.event.*
+import scala.swing.Swing.*
 
 /**
  * Wrapper for JColorChooser. Publishes  `ColorChanged` events, when the color selection changes.
@@ -23,25 +23,23 @@ import scala.swing.Swing._
  * @author Ingo Maier
  * @see javax.swing.JColorChooser
  */
-object ColorChooser {
-  def showDialog(parent: PeerContainer, title: String, color: scala.swing.Color): scala.Option[Color] = {
-    toOption[Color](javax.swing.JColorChooser.showDialog(parent.peer, title, color))
-  }
-}
+object ColorChooser:
+    def showDialog(parent: PeerContainer, title: String, color: scala.swing.Color): scala.Option[Color] =
+        toOption[Color](javax.swing.JColorChooser.showDialog(parent.peer, title, color))
 
-class ColorChooser(color0: Color) extends Component  {
-  def this() = this(java.awt.Color.white)
-  
-  override lazy val peer: JColorChooser =  new JColorChooser(color0) with SuperMixin
+class ColorChooser(color0: Color) extends Component:
+    def this() = this(java.awt.Color.white)
 
-  peer.getSelectionModel.addChangeListener(new javax.swing.event.ChangeListener {
-    def stateChanged(e: javax.swing.event.ChangeEvent): Unit =
-      publish(ColorChanged(ColorChooser.this, peer.getColor))
-  })
+    override lazy val peer: JColorChooser = new JColorChooser(color0) with SuperMixin
 
-  def color: Color = peer.getColor
-  def color_=(c: Color): Unit = peer.setColor(c)
+    peer.getSelectionModel.addChangeListener(new javax.swing.event.ChangeListener:
+            def stateChanged(e: javax.swing.event.ChangeEvent): Unit =
+                publish(ColorChanged(ColorChooser.this, peer.getColor))
+    )
 
-  def dragEnabled: Boolean = peer.getDragEnabled
-  def dragEnabled_=(b: Boolean): Unit = peer.setDragEnabled(b)
-}
+    def color: Color            = peer.getColor
+    def color_=(c: Color): Unit = peer.setColor(c)
+
+    def dragEnabled: Boolean            = peer.getDragEnabled
+    def dragEnabled_=(b: Boolean): Unit = peer.setDragEnabled(b)
+end ColorChooser

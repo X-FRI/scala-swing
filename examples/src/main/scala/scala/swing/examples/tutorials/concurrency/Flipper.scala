@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.concurrency
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.ButtonClicked
 import javax.swing.SwingWorker
 import java.util.Random
@@ -42,82 +42,75 @@ import java.util.Random
  * Source code reference:
  * [[http://docs.oracle.com/javase/tutorial/uiswing/examples/concurrency/FlipperProject/src/concurrency/Flipper.java]]
  */
-class Flipper extends MainFrame {
-  var flipTask: FlipTask = null
-  title = "Flipper"
+class Flipper extends MainFrame:
+    var flipTask: FlipTask = null
+    title = "Flipper"
 
-  val headsText = new TextField(20) {
-    editable = false
-    horizontalAlignment = Alignment.Right
-    border = Swing.BeveledBorder(Swing.Lowered)
-  }
-  val totalText = new TextField(20) {
-    editable = false
-    horizontalAlignment = Alignment.Right
-    border = Swing.BeveledBorder(Swing.Lowered)
-  }
-  val devText = new TextField(20) {
-    editable = false
-    horizontalAlignment = Alignment.Right
-    border = Swing.BeveledBorder(Swing.Lowered)
-  }
-  val startButton = new Button("Start")
-  val stopButton = new Button("Stop") {
-    enabled = false
-  }
-  val panel = new GridBagPanel() {
-    val c = new Constraints()
-    c.insets = new Insets(3, 10, 3, 10)
-    layout(headsText) = c
-    layout(totalText) = c
-    layout(devText) = c
-    layout(startButton) = c
-    layout(stopButton) = c
-  }
+    val headsText = new TextField(20):
+        editable = false
+        horizontalAlignment = Alignment.Right
+        border = Swing.BeveledBorder(Swing.Lowered)
+    val totalText = new TextField(20):
+        editable = false
+        horizontalAlignment = Alignment.Right
+        border = Swing.BeveledBorder(Swing.Lowered)
+    val devText = new TextField(20):
+        editable = false
+        horizontalAlignment = Alignment.Right
+        border = Swing.BeveledBorder(Swing.Lowered)
+    val startButton = new Button("Start")
+    val stopButton = new Button("Stop"):
+        enabled = false
+    val panel = new GridBagPanel():
+        val c = new Constraints()
+        c.insets = new Insets(3, 10, 3, 10)
+        layout(headsText) = c
+        layout(totalText) = c
+        layout(devText) = c
+        layout(startButton) = c
+        layout(stopButton) = c
 
-  contents = panel
+    contents = panel
 
-  class FlipPair(val heads: Long, val total: Long) {}
+    class FlipPair(val heads: Long, val total: Long) {}
 
-  class FlipTask extends SwingWorker[Unit, FlipPair] {
-    override def doInBackground(): Unit = {
-      var heads: Long = 0
-      var total: Long = 0
-      val random: Random = new Random()
-      while (!isCancelled()) {
-        total += 1
-        if (random.nextBoolean()) {
-          heads += 1
-        }
-        publish(new FlipPair(heads, total))
-      }
+    class FlipTask extends SwingWorker[Unit, FlipPair]:
+        override def doInBackground(): Unit =
+            var heads: Long    = 0
+            var total: Long    = 0
+            val random: Random = new Random()
+            while !isCancelled() do
+                total += 1
+                if random.nextBoolean() then
+                    heads += 1
+                publish(new FlipPair(heads, total))
+            end while
+        end doInBackground
+
+        override def process(pairs: java.util.List[FlipPair]): Unit =
+            val pair: FlipPair = pairs.get(pairs.size - 1);
+            headsText.text = pair.heads.toInt.toString
+            totalText.text = pair.total.toInt.toString
+            val dt = (pair.heads.toDouble) / (pair.total.toDouble) - 0.5
+            devText.text = f"$dt%.10g"
+        end process
+    end FlipTask
+
+    listenTo(startButton)
+    listenTo(stopButton)
+    reactions += {
+        case ButtonClicked(`startButton`) =>
+            startButton.enabled = false
+            stopButton.enabled = true
+            flipTask = new FlipTask()
+            flipTask.execute()
+        case ButtonClicked(`stopButton`) =>
+            startButton.enabled = true
+            stopButton.enabled = false
+            flipTask.cancel(true)
+            flipTask = null
     }
+end Flipper
 
-    override def process(pairs: java.util.List[FlipPair]): Unit = {
-      val pair: FlipPair = pairs.get(pairs.size - 1);
-      headsText.text = pair.heads.toInt.toString
-      totalText.text = pair.total.toInt.toString
-      val dt = (pair.heads.toDouble) / (pair.total.toDouble) - 0.5
-      devText.text = f"$dt%.10g"
-    }
-  }
-  
-  listenTo(startButton)
-  listenTo(stopButton)
-  reactions += {
-    case ButtonClicked(`startButton`) =>
-      startButton.enabled = false
-      stopButton.enabled = true
-      flipTask = new FlipTask()
-      flipTask.execute()
-    case ButtonClicked(`stopButton`) =>
-      startButton.enabled = true
-      stopButton.enabled = false
-      flipTask.cancel(true)
-      flipTask = null
-  }
-}
-
-object Flipper extends SimpleSwingApplication {
-  lazy val top = new Flipper()
-}
+object Flipper extends SimpleSwingApplication:
+    lazy val top = new Flipper()

@@ -17,10 +17,10 @@ import scala.collection.mutable
 /**
   * Default partial implementation for mutable map adapters.
   */
-abstract class MapWrapper[K, V] extends mutable.Map[K, V] {
-  /** The collection passed to `addAll` and `subtractAll` */
-  type MoreElem[+B] = IterableOnce[B]
+abstract class MapWrapper[K, V] extends mutable.Map[K, V]:
+    /** The collection passed to `addAll` and `subtractAll` */
+    type MoreElem[+B] = IterableOnce[B]
 
-  /** Cross-version way for creating an iterator from `MoreElem`. */
-  final protected def mkIterator[B](xs: MoreElem[B]): Iterator[B] = xs.iterator
-}
+    /** Cross-version way for creating an iterator from `MoreElem`. */
+    final protected def mkIterator[B](xs: MoreElem[B]): Iterator[B] = xs.iterator
+end MapWrapper

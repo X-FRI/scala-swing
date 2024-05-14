@@ -19,24 +19,23 @@ import scala.collection.immutable
  *
  * @see javax.swing.RootPaneContainer
  */
-trait RootPanel extends Container {
-  def peer: java.awt.Component with javax.swing.RootPaneContainer
+trait RootPanel extends Container:
+    def peer: java.awt.Component with javax.swing.RootPaneContainer
 
-  /**
+    /**
    * At most one component.
    */
-  def contents: immutable.Seq[Component] =
-    if (peer.getContentPane.getComponentCount == 0) Nil
-    else {
-      val c = peer.getContentPane.getComponent(0).asInstanceOf[javax.swing.JComponent]
-      List(UIElement.cachedWrapper[Component](c))
-    }
+    def contents: immutable.Seq[Component] =
+        if peer.getContentPane.getComponentCount == 0 then Nil
+        else {
+            val c = peer.getContentPane.getComponent(0).asInstanceOf[javax.swing.JComponent]
+            List(UIElement.cachedWrapper[Component](c))
+        }
 
-  def contents_=(c: Component): Unit = {
-    if (peer.getContentPane.getComponentCount > 0) {
-      val old = peer.getContentPane.getComponent(0)
-      peer.getContentPane.remove(old)
-    }
-    peer.getContentPane.add(c.peer)
-  }
-}
+    def contents_=(c: Component): Unit =
+        if peer.getContentPane.getComponentCount > 0 then
+            val old = peer.getContentPane.getComponent(0)
+            peer.getContentPane.remove(old)
+        peer.getContentPane.add(c.peer)
+    end contents_=
+end RootPanel

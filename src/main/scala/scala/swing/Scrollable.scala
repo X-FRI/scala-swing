@@ -12,21 +12,21 @@
 
 package scala.swing
 
-object Scrollable {
-  trait Wrapper extends Scrollable {
-    protected def scrollablePeer: javax.swing.Scrollable
-    def preferredViewportSize: Dimension = scrollablePeer.getPreferredScrollableViewportSize
+object Scrollable:
+    trait Wrapper extends Scrollable:
+        protected def scrollablePeer: javax.swing.Scrollable
+        def preferredViewportSize: Dimension = scrollablePeer.getPreferredScrollableViewportSize
 
-    def tracksViewportHeight: Boolean = scrollablePeer.getScrollableTracksViewportHeight
-    def tracksViewportWidth: Boolean = scrollablePeer.getScrollableTracksViewportWidth
+        def tracksViewportHeight: Boolean = scrollablePeer.getScrollableTracksViewportHeight
+        def tracksViewportWidth: Boolean  = scrollablePeer.getScrollableTracksViewportWidth
 
-    def blockIncrement(visibleRect: Rectangle, orientation: Orientation.Value, direction: Int): Int =
-      scrollablePeer.getScrollableBlockIncrement(visibleRect, orientation.id, direction)
+        def blockIncrement(visibleRect: Rectangle, orientation: Orientation.Value, direction: Int): Int =
+            scrollablePeer.getScrollableBlockIncrement(visibleRect, orientation.id, direction)
 
-    def unitIncrement(visibleRect: Rectangle, orientation: Orientation.Value, direction: Int): Int =
-      scrollablePeer.getScrollableUnitIncrement(visibleRect, orientation.id, direction)
-  }
-}
+        def unitIncrement(visibleRect: Rectangle, orientation: Orientation.Value, direction: Int): Int =
+            scrollablePeer.getScrollableUnitIncrement(visibleRect, orientation.id, direction)
+    end Wrapper
+end Scrollable
 
 /**
  * A component that is specially suitable for being placed inside a
@@ -34,12 +34,12 @@ object Scrollable {
  *
  * @see javax.swing.Scrollable
  */
-trait Scrollable extends Component {
-  def preferredViewportSize: Dimension
+trait Scrollable extends Component:
+    def preferredViewportSize: Dimension
 
-  def tracksViewportHeight: Boolean
-  def tracksViewportWidth: Boolean
+    def tracksViewportHeight: Boolean
+    def tracksViewportWidth: Boolean
 
-  def blockIncrement(visibleRect: Rectangle, orientation: Orientation.Value, direction: Int): Int
-  def unitIncrement(visibleRect: Rectangle, orientation: Orientation.Value, direction: Int): Int
-}
+    def blockIncrement(visibleRect: Rectangle, orientation: Orientation.Value, direction: Int): Int
+    def unitIncrement(visibleRect: Rectangle, orientation: Orientation.Value, direction: Int): Int
+end Scrollable

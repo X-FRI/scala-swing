@@ -30,128 +30,126 @@ import scala.swing.event.Event
  *    since reactors (strongly) reference publishers they are interested in.
  *  </p>
  */
-trait Publisher extends Reactor {
-  import Reactions._
+trait Publisher extends Reactor:
+    import Reactions.*
 
-  protected val listeners: RefSet[Reaction] = new RefSet[Reaction] {
-    protected val underlying: mutable.Set[Reference[Reaction]] =
-      new mutable.HashSet[Reference[Reaction]]
+    protected val listeners: RefSet[Reaction] = new RefSet[Reaction]:
+        protected val underlying: mutable.Set[Reference[Reaction]] =
+            new mutable.HashSet[Reference[Reaction]]
 
-    protected def Ref(a: Reaction): Ref[Reaction] = a match {
-      case a: StronglyReferenced => new StrongReference [Reaction](a)                 with super.Ref[Reaction]
-      case _                     => new WeakReference   [Reaction](a, referenceQueue) with super.Ref[Reaction]
-    }
-  }
+        protected def Ref(a: Reaction): Ref[Reaction] = a match
+            case a: StronglyReferenced => new StrongReference[Reaction](a) with super.Ref[Reaction]
+            case _                     => new WeakReference[Reaction](a, referenceQueue) with super.Ref[Reaction]
 
-  private[swing] def subscribe  (listener: Reaction): Unit = listeners += listener
-  private[swing] def unsubscribe(listener: Reaction): Unit = listeners -= listener
+    private[swing] def subscribe(listener: Reaction): Unit   = listeners += listener
+    private[swing] def unsubscribe(listener: Reaction): Unit = listeners -= listener
 
-  /**
+    /**
    * Notify all registered reactions.
    */
-  def publish(e: Event): Unit = for (l <- listeners) if (l.isDefinedAt(e)) l(e)
+    def publish(e: Event): Unit = for l <- listeners do if l.isDefinedAt(e) then l(e)
 
-  listenTo(this)
-}
+    listenTo(this)
+end Publisher
 
 /**
  * A publisher that subscribes itself to an underlying event source not before the first
  * reaction is installed. Can unsubscribe itself when the last reaction is uninstalled.
  */
-private[swing] trait LazyPublisher extends Publisher {
-  import Reactions._
+private[swing] trait LazyPublisher extends Publisher:
+    import Reactions.*
 
-  protected def onFirstSubscribe (): Unit
-  protected def onLastUnsubscribe(): Unit
+    protected def onFirstSubscribe(): Unit
+    protected def onLastUnsubscribe(): Unit
 
-  override def subscribe(listener: Reaction): Unit = {
-    if (listeners.size == 1) onFirstSubscribe()
-    super.subscribe(listener)
-  }
+    override def subscribe(listener: Reaction): Unit =
+        if listeners.size == 1 then onFirstSubscribe()
+        super.subscribe(listener)
 
-  override def unsubscribe(listener: Reaction): Unit = {
-    super.unsubscribe(listener)
-    if (listeners.size == 1) onLastUnsubscribe()
-  }
-}
+    override def unsubscribe(listener: Reaction): Unit =
+        super.unsubscribe(listener)
+        if listeners.size == 1 then onLastUnsubscribe()
+end LazyPublisher
 
+import scala.ref.*
 
+private[swing] trait SingleRefCollection[A <: AnyRef] extends Iterable[A]:
+    self =>
 
-import scala.ref._
+    trait Ref[+B <: AnyRef] extends Reference[B]:
+        override def hashCode(): Int = get match
+            case Some(x) => x.##
+            case _       => 0
+        override def equals(that: Any): Boolean = that match
+            case that: ReferenceWrapper[?] =>
+                val v1 = this.get
+                val v2 = that.get
+                v1 == v2
+            case _ => false
+    end Ref
 
-private[swing] trait SingleRefCollection[A <: AnyRef] extends Iterable[A] { self =>
+    // type Ref <: Reference[A] // TODO: could use higher kinded types, but currently crashes
+    protected[this] def Ref(a: A): Ref[A]
+    protected[this] val referenceQueue = new ReferenceQueue[A]
 
-  trait Ref[+B <: AnyRef] extends Reference[B] {
-    override def hashCode(): Int = get match {
-      case Some(x)  => x.##
-      case _        => 0
-    }
-    override def equals(that: Any): Boolean = that match {
-      case that: ReferenceWrapper[_] =>
-        val v1 = this.get
-        val v2 = that.get
-        v1 == v2
-      case _ => false
-    }
-  }
+    protected val underlying: Iterable[Reference[A]]
 
-  //type Ref <: Reference[A] // TODO: could use higher kinded types, but currently crashes
-  protected[this] def Ref(a: A): Ref[A]
-  protected[this] val referenceQueue = new ReferenceQueue[A]
+    def purgeReferences(): Unit =
+        var ref = referenceQueue.poll
+        while ref.isDefined do
+            removeReference(ref.get)
+            ref = referenceQueue.poll
+    end purgeReferences
 
-  protected val underlying: Iterable[Reference[A]]
+    protected[this] def removeReference(ref: Reference[A]): Unit
 
-  def purgeReferences(): Unit = {
-    var ref = referenceQueue.poll
-    while (ref.isDefined) {
-      removeReference(ref.get)
-      ref = referenceQueue.poll
-    }
-  }
+    def iterator: Iterator[A] = new Iterator[A]:
+        private val elems          = self.underlying.iterator
+        private var hd: A          = _
+        private var ahead: Boolean = false
+        private def skip(): Unit =
+            while !ahead && elems.hasNext do
+                // make sure we have a reference to the next element,
+                // otherwise it might be garbage collected
+                val next = elems.next().get
+                ahead = next.isDefined
+                if ahead then hd = next.get
+        def hasNext: Boolean =
+            skip(); ahead
+        def next(): A =
+            if hasNext then
+                ahead = false; hd
+            else throw new NoSuchElementException("next on empty iterator")
+end SingleRefCollection
 
-  protected[this] def removeReference(ref: Reference[A]): Unit
+private[swing] class StrongReference[+T <: AnyRef](value: T) extends Reference[T]:
+    private[this] var ref: Option[T] = Some(value)
+    def isValid: Boolean             = ref.isDefined
+    def apply(): T                   = ref.get
+    def get: Option[T]               = ref
+    override def toString: String    = get.map(_.toString).getOrElse("<deleted>")
+    def clear(): Unit                = ref = None
+    def enqueue(): Boolean           = false
+    def isEnqueued: Boolean          = false
+end StrongReference
 
-  def iterator: Iterator[A] = new Iterator[A] {
-    private val elems = self.underlying.iterator
-    private var hd: A = _
-    private var ahead: Boolean = false
-    private def skip(): Unit =
-      while (!ahead && elems.hasNext) {
-        // make sure we have a reference to the next element,
-        // otherwise it might be garbage collected
-        val next = elems.next().get
-        ahead = next.isDefined
-        if (ahead) hd = next.get
-      }
-    def hasNext: Boolean = { skip(); ahead }
-    def next(): A =
-      if (hasNext) { ahead = false; hd }
-      else throw new NoSuchElementException("next on empty iterator")
-  }
-}
+private[swing] abstract class RefSet[A <: AnyRef] extends SetWrapper[A] with SingleRefCollection[A]:
+    self =>
+    protected val underlying: mutable.Set[Reference[A]]
 
-private[swing] class StrongReference[+T <: AnyRef](value: T) extends Reference[T] {
-  private[this] var ref: Option[T] = Some(value)
-  def isValid: Boolean = ref.isDefined
-  def apply(): T = ref.get
-  def get : Option[T] = ref
-  override def toString: String = get.map(_.toString).getOrElse("<deleted>")
-  def clear(): Unit = { ref = None }
-  def enqueue(): Boolean = false
-  def isEnqueued: Boolean = false
-}
+    override def addOne(el: A): this.type =
+        purgeReferences(); underlying += Ref(el); this
+    override def subtractOne(el: A): this.type =
+        underlying -= Ref(el); purgeReferences(); this
 
-private[swing] abstract class RefSet[A <: AnyRef] extends SetWrapper[A] with SingleRefCollection[A] { self =>
-  protected val underlying: mutable.Set[Reference[A]]
+    override def clear(): Unit =
+        underlying.clear(); purgeReferences()
 
-  override def addOne     (el: A): this.type = { purgeReferences(); underlying += Ref(el); this }
-  override def subtractOne(el: A): this.type = { underlying -= Ref(el); purgeReferences(); this }
+    def contains(el: A): Boolean =
+        purgeReferences(); underlying.contains(Ref(el))
 
-  override def clear(): Unit = { underlying.clear(); purgeReferences() }
+    override def size: Int =
+        purgeReferences(); underlying.size
 
-  def contains(el: A): Boolean = { purgeReferences(); underlying.contains(Ref(el)) }
-
-  override def size: Int = { purgeReferences(); underlying.size }
-
-  protected[this] def removeReference(ref: Reference[A]): Unit = { underlying -= ref }
-}
+    protected[this] def removeReference(ref: Reference[A]): Unit = underlying -= ref
+end RefSet

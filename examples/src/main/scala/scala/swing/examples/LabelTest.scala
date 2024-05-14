@@ -12,19 +12,16 @@
 
 package scala.swing.examples
 
-import scala.swing._
-import scala.swing.event._
+import scala.swing.*
+import scala.swing.event.*
 
-object LabelTest extends SimpleSwingApplication {
-  def top: Frame = new MainFrame {
-    contents = new Label {
-      text = "Hello"
-      listenTo(mouse.clicks)
-      reactions += {
-        case MousePressed(_, _, _, _, _) =>
-          println("Mouse pressed")
-      }
-    }
-  }
-}
-
+object LabelTest extends SimpleSwingApplication:
+    def top: Frame = new MainFrame:
+        contents = new Label:
+            text = "Hello"
+            listenTo(mouse.clicks)
+            reactions += {
+                case MousePressed(_, _, _, _, _) =>
+                    println("Mouse pressed")
+            }
+end LabelTest

@@ -13,8 +13,7 @@
 package scala.swing
 package event
 
-object ActionEvent {
-  def unapply(a: ActionEvent): Option[Component] = Some(a.source)
-}
+object ActionEvent:
+    def unapply(a: ActionEvent): Option[Component] = Some(a.source)
 
 class ActionEvent(override val source: Component) extends ComponentEvent

@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.layout
 
-import scala.swing._
+import scala.swing.*
 
 /**
  * Tutorials: How to Use GridBagLayout
@@ -41,52 +41,51 @@ import scala.swing._
  * 
  * GridBagLayoutDemo.scala requires no other files.
  */
-class GridBagLayoutDemo extends GridBagPanel {
-  val shouldFill = true
-  val shouldWeightX = true
-  val RightToLeft = false
-  val c: Constraints = new Constraints()
-  //natural height, maximum width
-  if (shouldFill) c.fill = GridBagPanel.Fill.Horizontal
-  if (shouldWeightX) c.weightx = 0.5
-  c.gridx = 0
-  c.gridy = 0
-  layout(new Button("Button 1")) = c
-  
-  c.fill = GridBagPanel.Fill.Horizontal
-  c.weightx = 0.5
-  c.gridx = 1
-  c.gridy = 0
-  layout(new Button("Button 2")) = c
-  
-  c.fill = GridBagPanel.Fill.Horizontal
-  c.weightx = 0.5
-  c.gridx = 2
-  c.gridy = 0
-  layout(new Button("Button 3")) = c
-  
-  c.fill = GridBagPanel.Fill.Horizontal
-  c.ipady = 40 // make this component tall
-  c.weightx = 0.5
-  c.gridwidth = 3
-  c.gridx = 0
-  c.gridy = 1
-  layout(new Button("Long-Named Button 4")) = c
-  
-  c.fill = GridBagPanel.Fill.Horizontal
-  c.ipady = 0       //reset to default
-  c.weightx = 1.0   //request any extra vertical space
-  c.anchor = GridBagPanel.Anchor.PageEnd //bottom of space
-  c.insets = new Insets(10, 0, 0, 0) // top padding
-  c.gridx = 1
-  c.gridwidth = 2
-  c.gridy = 22
-  layout(new Button("5")) = c
-}
+class GridBagLayoutDemo extends GridBagPanel:
+    val shouldFill     = true
+    val shouldWeightX  = true
+    val RightToLeft    = false
+    val c: Constraints = new Constraints()
+    // natural height, maximum width
+    if shouldFill then c.fill = GridBagPanel.Fill.Horizontal
+    if shouldWeightX then c.weightx = 0.5
+    c.gridx = 0
+    c.gridy = 0
+    layout(new Button("Button 1")) = c
 
-object GridBagLayoutDemo extends SimpleSwingApplication {
-  lazy val top = new MainFrame() {
-    title = "GridBagLayoutDemo"
-    contents = new GridBagLayoutDemo()
-  }
-} 
+    c.fill = GridBagPanel.Fill.Horizontal
+    c.weightx = 0.5
+    c.gridx = 1
+    c.gridy = 0
+    layout(new Button("Button 2")) = c
+
+    c.fill = GridBagPanel.Fill.Horizontal
+    c.weightx = 0.5
+    c.gridx = 2
+    c.gridy = 0
+    layout(new Button("Button 3")) = c
+
+    c.fill = GridBagPanel.Fill.Horizontal
+    c.ipady = 40 // make this component tall
+    c.weightx = 0.5
+    c.gridwidth = 3
+    c.gridx = 0
+    c.gridy = 1
+    layout(new Button("Long-Named Button 4")) = c
+
+    c.fill = GridBagPanel.Fill.Horizontal
+    c.ipady = 0                            // reset to default
+    c.weightx = 1.0                        // request any extra vertical space
+    c.anchor = GridBagPanel.Anchor.PageEnd // bottom of space
+    c.insets = new Insets(10, 0, 0, 0)     // top padding
+    c.gridx = 1
+    c.gridwidth = 2
+    c.gridy = 22
+    layout(new Button("5")) = c
+end GridBagLayoutDemo
+
+object GridBagLayoutDemo extends SimpleSwingApplication:
+    lazy val top = new MainFrame():
+        title = "GridBagLayoutDemo"
+        contents = new GridBagLayoutDemo()
+end GridBagLayoutDemo

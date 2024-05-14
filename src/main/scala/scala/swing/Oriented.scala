@@ -15,6 +15,5 @@ package scala.swing
 /**
  * Something that can have an orientation.
  */
-trait Oriented {
-  def orientation: Orientation.Value
-}
+trait Oriented:
+    def orientation: Orientation.Value

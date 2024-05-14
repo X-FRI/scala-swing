@@ -30,10 +30,10 @@
  */
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
-import javax.swing.{ Icon, ImageIcon }
+import javax.swing.{Icon, ImageIcon}
 
 /**
  * Tutorial: How to Use Icons
@@ -65,116 +65,107 @@ import javax.swing.{ Icon, ImageIcon }
  * @author Collin Fagan
  * @version 2.0
  */
-class IconDemoApp extends MainFrame {
+class IconDemoApp extends MainFrame:
 
-  private val imagedir = "/scala/swing/examples/tutorials/images/"
-  private val placeholderIcon = new MissingIcon()
+    private val imagedir        = "/scala/swing/examples/tutorials/images/"
+    private val placeholderIcon = new MissingIcon()
 
-  /**
+    /**
    * List of all the descriptions of the image files. These correspond one to
    * one with the image file names
    */
-  private val imageFileNames = Array[String]( "sunw01.jpg", "sunw02.jpg",
-    "sunw03.jpg", "sunw04.jpg", "sunw05.jpg")
+    private val imageFileNames = Array[String]("sunw01.jpg", "sunw02.jpg",
+        "sunw03.jpg", "sunw04.jpg", "sunw05.jpg")
 
-  private val imageCaptions = Array[String]("Original SUNW Logo", "The Clocktower",
-    "Clocktower from the West", "The Mansion", "Sun Auditorium")
+    private val imageCaptions = Array[String]("Original SUNW Logo", "The Clocktower",
+        "Clocktower from the West", "The Mansion", "Sun Auditorium")
 
-  // A label for displaying the pictures
-  private val photographLabel = new Label() {
-    verticalTextPosition = Alignment.Bottom
-    horizontalTextPosition = Alignment.Center
-    horizontalAlignment = Alignment.Center
-    border = Swing.EmptyBorder(5, 5, 5, 5)
-  }
+    // A label for displaying the pictures
+    private val photographLabel = new Label():
+        verticalTextPosition = Alignment.Bottom
+        horizontalTextPosition = Alignment.Center
+        horizontalAlignment = Alignment.Center
+        border = Swing.EmptyBorder(5, 5, 5, 5)
 
-  // We add two glue components. Later in process() we will add thumbnail buttons
-  // to the toolbar in between these glue components. This will center the
-  // buttons in the toolbar.
-  private val buttonBar = new ToolBar() {
-    contents += Swing.Glue
-    contents += Swing.Glue
-  }
-  contents = new BorderPanel() {
-    layout(buttonBar) = BorderPanel.Position.South
-    layout(photographLabel) = BorderPanel.Position.Center
-  }
-  size = new Dimension(400, 300)
+    // We add two glue components. Later in process() we will add thumbnail buttons
+    // to the toolbar in between these glue components. This will center the
+    // buttons in the toolbar.
+    private val buttonBar = new ToolBar():
+        contents += Swing.Glue
+        contents += Swing.Glue
+    contents = new BorderPanel():
+        layout(buttonBar) = BorderPanel.Position.South
+        layout(photographLabel) = BorderPanel.Position.Center
+    size = new Dimension(400, 300)
 
-  // this centers the frame on the screen
-  // setLocationRelativeTo(null)
+    // this centers the frame on the screen
+    // setLocationRelativeTo(null)
 
-  def loadImage( fileName:String, caption: String ): Option[ThumbnailAction] = {
-    IconDemoApp.createImageIcon(imagedir + fileName) match {
-      case Some(img) =>
-        val thumbnailIcon = new ImageIcon(getScaledImage(img.getImage, 32, 32))
-        Some(new ThumbnailAction(img, thumbnailIcon, caption, photographLabel))
-      case None =>
-        Some(new ThumbnailAction(placeholderIcon, placeholderIcon, caption, photographLabel))
+    def loadImage(fileName: String, caption: String): Option[ThumbnailAction] =
+        IconDemoApp.createImageIcon(imagedir + fileName) match
+            case Some(img) =>
+                val thumbnailIcon = new ImageIcon(getScaledImage(img.getImage, 32, 32))
+                Some(new ThumbnailAction(img, thumbnailIcon, caption, photographLabel))
+            case None =>
+                Some(new ThumbnailAction(placeholderIcon, placeholderIcon, caption, photographLabel))
+
+    import scala.concurrent.*
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    val f: Future[List[Option[ThumbnailAction]]] = Future {
+        imageCaptions.zip(imageFileNames).map {
+            case (cap, file) => loadImage(file, cap)
+        }.toList
     }
-  }
 
-  import scala.concurrent._
-  import scala.concurrent.ExecutionContext.Implicits.global
-
-  val f:Future[List[Option[ThumbnailAction]]] = Future {
-    imageCaptions.zip(imageFileNames).map {
-      case (cap, file) => loadImage(file, cap)
-    }.toList
-  }
-
-  f.foreach { thumbs =>
-    buttonBar.contents.dropRight(1)
-    thumbs.foreach { thumbAction =>
-      thumbAction.foreach { ta =>
-        buttonBar.contents += new Button(ta)
-      }
+    f.foreach { thumbs =>
+        buttonBar.contents.dropRight(1)
+        thumbs.foreach { thumbAction =>
+            thumbAction.foreach { ta =>
+                buttonBar.contents += new Button(ta)
+            }
+        }
+        buttonBar.contents += Swing.Glue
     }
-    buttonBar.contents += Swing.Glue
-  }
 
-  /**
+    /**
    * Resizes an image using a Graphics2D object backed by a BufferedImage.
    * @param srcImg - source image to scale
    * @param w - desired width
    * @param h - desired height
    * @return - the new resized image
    */
-  private def getScaledImage(srcImg: Image, w: Int, h: Int): Image = {
-    val resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
-    val g2: Graphics2D = resizedImg.createGraphics()
-    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
-    g2.drawImage(srcImg, 0, 0, w, h, null)
-    g2.dispose()
-    resizedImg
-  }
-}
+    private def getScaledImage(srcImg: Image, w: Int, h: Int): Image =
+        val resizedImg     = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
+        val g2: Graphics2D = resizedImg.createGraphics()
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
+        g2.drawImage(srcImg, 0, 0, w, h, null)
+        g2.dispose()
+        resizedImg
+    end getScaledImage
+end IconDemoApp
 
-object IconDemoApp extends SimpleSwingApplication {
-  def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+object IconDemoApp extends SimpleSwingApplication:
+    def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
 
-  lazy val top = new IconDemoApp() {
-    title = "Icon Demo: Please Select an Image"
-  }
-}
+    lazy val top = new IconDemoApp():
+        title = "Icon Demo: Please Select an Image"
+end IconDemoApp
 
 /**
  * @param photo - The full size photo to show in the button.
  * @param thumb - The thumbnail to show in the button.
  * @param desc - The description of the icon.
  */
-class ThumbnailAction(photo: Icon, thumb: Icon, desc: String, photographLabel:Label) extends Action("") {
-  // icon when an Action is applied to a butt
-  toolTip = desc
+class ThumbnailAction(photo: Icon, thumb: Icon, desc: String, photographLabel: Label) extends Action(""):
+    // icon when an Action is applied to a butt
+    toolTip = desc
 
-  // The short description becomes the tooltip of a button.
-  icon = thumb
+    // The short description becomes the tooltip of a button.
+    icon = thumb
 
-  def apply(): Unit = {
-    photographLabel.icon = photo
-    IconDemoApp.top.title = s"Icon Demo: $desc"
-  }
-}
-
-
+    def apply(): Unit =
+        photographLabel.icon = photo
+        IconDemoApp.top.title = s"Icon Demo: $desc"
+end ThumbnailAction

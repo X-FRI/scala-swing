@@ -13,6 +13,5 @@
 package scala.swing
 package event
 
-trait ComponentEvent extends UIEvent {
-  val source: Component
-}
+trait ComponentEvent extends UIEvent:
+    val source: Component

@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 import java.awt.Color
 
 /**
@@ -43,118 +43,119 @@ import java.awt.Color
  * BorderDemo.scala requires the following file:
  *    scala/swing/examples/tutorials/images/wavy.gif
  */
-class BorderDemo extends GridPanel(1, 0) {
+class BorderDemo extends GridPanel(1, 0):
 
-  val paneEdge = Swing.EmptyBorder(0, 10, 10, 10)
-  val blackline = Swing.LineBorder(Color.black)
-  val raisedetched = Swing.EtchedBorder(Swing.Raised)
-  val loweredetched = Swing.EtchedBorder(Swing.Lowered)
-  val raisedbevel = Swing.BeveledBorder(Swing.Raised)
-  val loweredbevel = Swing.BeveledBorder(Swing.Lowered)
-  val empty = Swing.EmptyBorder
+    val paneEdge      = Swing.EmptyBorder(0, 10, 10, 10)
+    val blackline     = Swing.LineBorder(Color.black)
+    val raisedetched  = Swing.EtchedBorder(Swing.Raised)
+    val loweredetched = Swing.EtchedBorder(Swing.Lowered)
+    val raisedbevel   = Swing.BeveledBorder(Swing.Raised)
+    val loweredbevel  = Swing.BeveledBorder(Swing.Lowered)
+    val empty         = Swing.EmptyBorder
 
+    def addCompForBorder(bord: javax.swing.border.Border, description: String): Seq[Component] =
+        List(Swing.RigidBox(new Dimension(0, 10)),
+            new GridPanel(1, 1):
+                contents += new Label(description, Swing.EmptyIcon, Alignment.Center)
+                border = bord
+        )
 
-  def addCompForBorder(bord: javax.swing.border.Border, description: String): Seq[Component] =
-    List(Swing.RigidBox(new Dimension(0, 10)), new GridPanel(1, 1) {
-      contents += new Label(description, Swing.EmptyIcon, Alignment.Center)
-      border = bord
-    })
+    // First pane: simple borders
+    val simpleBorders = new BoxPanel(Orientation.Vertical):
+        contents ++=
+            addCompForBorder(blackline, "line border") ++
+                addCompForBorder(raisedetched, "raised etched border") ++
+                addCompForBorder(loweredetched, "lowered etched border") ++
+                addCompForBorder(raisedbevel, "raised bevel border") ++
+                addCompForBorder(loweredbevel, "lowered bevel border") ++
+                addCompForBorder(empty, "empty border")
 
-  //First pane: simple borders
-  val simpleBorders = new BoxPanel(Orientation.Vertical) {
-    contents ++=
-      addCompForBorder(blackline, "line border") ++
-        addCompForBorder(raisedetched, "raised etched border") ++
-        addCompForBorder(loweredetched, "lowered etched border") ++
-        addCompForBorder(raisedbevel, "raised bevel border") ++
-        addCompForBorder(loweredbevel, "lowered bevel border") ++
-        addCompForBorder(empty, "empty border")
-  }
+    // Second pane: matte borders
+    val matteBorders = new BoxPanel(Orientation.Vertical):
+        border = paneEdge
 
-  //Second pane: matte borders
-  val matteBorders = new BoxPanel(Orientation.Vertical) {
-    border = paneEdge
+        val icon =
+            BorderDemo.createImageIcon("/scala/swing/examples/tutorials/images/wavy.gif", "wavy-line border icon")
 
-    val icon = BorderDemo.createImageIcon("/scala/swing/examples/tutorials/images/wavy.gif", "wavy-line border icon")
+        contents ++=
+            addCompForBorder(
+                Swing.MatteBorder(-1, -1, -1, -1, icon.getOrElse(null.asInstanceOf[javax.swing.Icon])),
+                "matte border (-1,-1,-1,-1,icon)") ++
+                addCompForBorder(
+                    Swing.MatteBorder(1, 5, 1, 1, Color.red),
+                    "matte border (1,5,1,1,Color.red)") ++
+                addCompForBorder(
+                    Swing.MatteBorder(0, 20, 0, 0, icon.getOrElse(null.asInstanceOf[javax.swing.Icon])),
+                    "matte border (0,20,0,0,icon)")
 
-    contents ++=
-      addCompForBorder(
-        Swing.MatteBorder(-1, -1, -1, -1, icon.getOrElse(null.asInstanceOf[javax.swing.Icon])),
-        "matte border (-1,-1,-1,-1,icon)") ++
-        addCompForBorder(
-          Swing.MatteBorder(1, 5, 1, 1, Color.red),
-          "matte border (1,5,1,1,Color.red)") ++
-        addCompForBorder(
-          Swing.MatteBorder(0, 20, 0, 0, icon.getOrElse(null.asInstanceOf[javax.swing.Icon])),
-          "matte border (0,20,0,0,icon)")
-  }
+    // Third pane: titled borders
+    val titledBorders = new BoxPanel(Orientation.Vertical):
+        border = paneEdge
 
-  //Third pane: titled borders
-  val titledBorders = new BoxPanel(Orientation.Vertical) {
-    border = paneEdge
+        def titleBorder(border: javax.swing.border.Border, justification: Int,
+            position: Int): javax.swing.border.Border =
+            val titled = Swing.TitledBorder(border, "title")
+            titled.setTitleJustification(justification)
+            titled.setTitlePosition(position)
+            titled
+        end titleBorder
 
-    def titleBorder(border: javax.swing.border.Border, justification: Int, position: Int): javax.swing.border.Border = {
-      val titled = Swing.TitledBorder(border, "title")
-      titled.setTitleJustification(justification)
-      titled.setTitlePosition(position)
-      titled
-    }
+        contents ++=
+            addCompForBorder(
+                titleBorder(blackline, javax.swing.border.TitledBorder.CENTER,
+                    javax.swing.border.TitledBorder.DEFAULT_POSITION),
+                "titled line border (centered, default pos.)") ++
+                addCompForBorder(
+                    titleBorder(loweredetched, javax.swing.border.TitledBorder.RIGHT,
+                        javax.swing.border.TitledBorder.DEFAULT_POSITION),
+                    "titled lowered etched border (right just., default pos.)") ++
+                addCompForBorder(
+                    titleBorder(loweredbevel, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                        javax.swing.border.TitledBorder.ABOVE_TOP),
+                    "titled lowered bevel border (default just., above top)") ++
+                addCompForBorder(
+                    titleBorder(empty, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                        javax.swing.border.TitledBorder.BOTTOM),
+                    "titled empty border (default just., bottom)")
 
-    contents ++=
-      addCompForBorder(
-        titleBorder(blackline, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION),
-        "titled line border (centered, default pos.)") ++
-        addCompForBorder(
-          titleBorder(loweredetched, javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION),
-          "titled lowered etched border (right just., default pos.)") ++
-        addCompForBorder(
-          titleBorder(loweredbevel, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.ABOVE_TOP),
-          "titled lowered bevel border (default just., above top)") ++
-        addCompForBorder(
-          titleBorder(empty, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM),
-          "titled empty border (default just., bottom)")
-  }
+    // Fourth pane: compound borders
+    val compoundBorders = new BoxPanel(Orientation.Vertical):
+        border = paneEdge
 
-  //Fourth pane: compound borders
-  val compoundBorders = new BoxPanel(Orientation.Vertical) {
-    border = paneEdge
+        val titledCompound = Swing.TitledBorder(Swing.CompoundBorder(Swing.LineBorder(Color.red),
+                Swing.CompoundBorder(Swing.BeveledBorder(Swing.Raised), Swing.BeveledBorder(Swing.Lowered))), "title")
+        titledCompound.setTitleJustification(javax.swing.border.TitledBorder.CENTER)
+        titledCompound.setTitlePosition(javax.swing.border.TitledBorder.BELOW_BOTTOM)
 
-    val titledCompound = Swing.TitledBorder(Swing.CompoundBorder(Swing.LineBorder(Color.red), Swing.CompoundBorder(Swing.BeveledBorder(Swing.Raised), Swing.BeveledBorder(Swing.Lowered))), "title")
-    titledCompound.setTitleJustification(javax.swing.border.TitledBorder.CENTER)
-    titledCompound.setTitlePosition(javax.swing.border.TitledBorder.BELOW_BOTTOM)
+        contents ++=
+            addCompForBorder(
+                Swing.CompoundBorder(raisedbevel, loweredbevel),
+                "compound border (two bevels)") ++
+                addCompForBorder(
+                    Swing.CompoundBorder(Swing.LineBorder(Color.red), Swing.CompoundBorder(raisedbevel, loweredbevel)),
+                    "compound border (add a red outline)") ++
+                addCompForBorder(
+                    titledCompound,
+                    "titled compound border (centered, below bottom)")
 
-    contents ++=
-      addCompForBorder(
-        Swing.CompoundBorder(raisedbevel, loweredbevel),
-        "compound border (two bevels)") ++
-        addCompForBorder(
-          Swing.CompoundBorder(Swing.LineBorder(Color.red), Swing.CompoundBorder(raisedbevel, loweredbevel)),
-          "compound border (add a red outline)") ++
-        addCompForBorder(
-          titledCompound,
-          "titled compound border (centered, below bottom)")
-  }
+    contents += new TabbedPane():
+        tooltip =
+            "<html>Blue Wavy Line border art crew:<br>&nbsp;&nbsp;&nbsp;Bill Pauley<br>&nbsp;&nbsp;&nbsp;Cris St. Aubyn<br>&nbsp;&nbsp;&nbsp;Ben Wronsky<br>&nbsp;&nbsp;&nbsp;Nathan Walrath<br>&nbsp;&nbsp;&nbsp;Tommy Adams, special consultant</html>"
 
+        pages += new TabbedPane.Page("Simple", simpleBorders)
+        pages += new TabbedPane.Page("Matte", matteBorders)
+        pages += new TabbedPane.Page("Titled", titledBorders)
+        pages += new TabbedPane.Page("Compound", compoundBorders)
 
-  contents += new TabbedPane() {
-    tooltip = "<html>Blue Wavy Line border art crew:<br>&nbsp;&nbsp;&nbsp;Bill Pauley<br>&nbsp;&nbsp;&nbsp;Cris St. Aubyn<br>&nbsp;&nbsp;&nbsp;Ben Wronsky<br>&nbsp;&nbsp;&nbsp;Nathan Walrath<br>&nbsp;&nbsp;&nbsp;Tommy Adams, special consultant</html>"
+        selection.index = 0
+end BorderDemo
 
-    pages += new TabbedPane.Page("Simple", simpleBorders)
-    pages += new TabbedPane.Page("Matte", matteBorders)
-    pages += new TabbedPane.Page("Titled", titledBorders)
-    pages += new TabbedPane.Page("Compound", compoundBorders)
+object BorderDemo extends SimpleSwingApplication:
+    def createImageIcon(path: String, description: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
 
-    selection.index = 0
-  }
-}
-
-object BorderDemo extends SimpleSwingApplication {
-  def createImageIcon(path: String, description: String): Option[javax.swing.ImageIcon] =
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
-
-  lazy val top = new MainFrame() {
-    title = "BorderDemo"
-    //Create and set up the content pane.
-    contents = new BorderDemo()
-  }
-}
+    lazy val top = new MainFrame():
+        title = "BorderDemo"
+        // Create and set up the content pane.
+        contents = new BorderDemo()
+end BorderDemo

@@ -15,6 +15,6 @@ package event
 
 abstract class PopupMenuEvent extends ComponentEvent
 
-case class PopupMenuCanceled(source: PopupMenu) extends PopupMenuEvent
+case class PopupMenuCanceled(source: PopupMenu)            extends PopupMenuEvent
 case class PopupMenuWillBecomeInvisible(source: PopupMenu) extends PopupMenuEvent
-case class PopupMenuWillBecomeVisible(source: PopupMenu) extends PopupMenuEvent
+case class PopupMenuWillBecomeVisible(source: PopupMenu)   extends PopupMenuEvent

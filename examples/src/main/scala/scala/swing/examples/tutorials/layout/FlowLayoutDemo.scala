@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.layout
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.ButtonClicked
 import java.awt.ComponentOrientation
 import javax.swing.UIManager
@@ -44,57 +44,56 @@ import javax.swing.UIManager
  * 
  * FlowLayoutDemo.scala requires no other files
  */
-class FlowLayoutDemo extends BorderPanel {
-  val RtoL = "Right to left"
-  val LtoR = "Left to right"
-  val controls: FlowPanel = new FlowPanel()
-  val applyButton = new Button("Apply component orientation")
-  val compsToExperiment = new FlowPanel(FlowPanel.Alignment.Trailing)()
-  val LtoRbutton = new RadioButton(LtoR) { selected = true }
-  val RtoLbutton = new RadioButton(RtoL)
-  
-  //Add buttons to the experiment layout
-  val buttonSeq = Seq[Button](
-      new Button("Button 1"),
-      new Button("Button 2"),
-      new Button("Button 3"),
-      new Button("Long Named Button 4"),
-      new Button("5") )
-  compsToExperiment.contents ++= buttonSeq
-  
-  //Left to right component orientation is selected by default
-  compsToExperiment.componentOrientation = ComponentOrientation.LEFT_TO_RIGHT
-  
-  //Add controls to set up the component orientation in the experiment layout
-  val group = new ButtonGroup() {
-    buttons += LtoRbutton
-    buttons += RtoLbutton
-  }
-  controls.contents += LtoRbutton
-  controls.contents += RtoLbutton
-  controls.contents += applyButton
-  
-  layout(compsToExperiment) = BorderPanel.Position.Center
-  layout(controls) = BorderPanel.Position.South
-  
-  listenTo(applyButton)
-  reactions += {
-    case ButtonClicked(`applyButton`) =>
-      compsToExperiment.componentOrientation = 
-        if (LtoRbutton.selected) ComponentOrientation.LEFT_TO_RIGHT
-        else ComponentOrientation.RIGHT_TO_LEFT
-      compsToExperiment.validate()
-      compsToExperiment.repaint()
-  }
-}
+class FlowLayoutDemo extends BorderPanel:
+    val RtoL                = "Right to left"
+    val LtoR                = "Left to right"
+    val controls: FlowPanel = new FlowPanel()
+    val applyButton         = new Button("Apply component orientation")
+    val compsToExperiment   = new FlowPanel(FlowPanel.Alignment.Trailing)()
+    val LtoRbutton = new RadioButton(LtoR):
+        selected = true
+    val RtoLbutton = new RadioButton(RtoL)
 
-object FlowLayoutDemo extends SimpleSwingApplication {
-  /* Use an appropriate Look and Feel */
-  //TD UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel")
-  /* Turn off metal's use of bold fonts */
-  //TD UIManager.put("swing.boldMetal", false)
-  lazy val top = new MainFrame() {
-    title = "FlowLayoutDemo"
-    contents = new FlowLayoutDemo()
-  }
-}
+    // Add buttons to the experiment layout
+    val buttonSeq = Seq[Button](
+        new Button("Button 1"),
+        new Button("Button 2"),
+        new Button("Button 3"),
+        new Button("Long Named Button 4"),
+        new Button("5"))
+    compsToExperiment.contents ++= buttonSeq
+
+    // Left to right component orientation is selected by default
+    compsToExperiment.componentOrientation = ComponentOrientation.LEFT_TO_RIGHT
+
+    // Add controls to set up the component orientation in the experiment layout
+    val group = new ButtonGroup():
+        buttons += LtoRbutton
+        buttons += RtoLbutton
+    controls.contents += LtoRbutton
+    controls.contents += RtoLbutton
+    controls.contents += applyButton
+
+    layout(compsToExperiment) = BorderPanel.Position.Center
+    layout(controls) = BorderPanel.Position.South
+
+    listenTo(applyButton)
+    reactions += {
+        case ButtonClicked(`applyButton`) =>
+            compsToExperiment.componentOrientation =
+                if LtoRbutton.selected then ComponentOrientation.LEFT_TO_RIGHT
+                else ComponentOrientation.RIGHT_TO_LEFT
+            compsToExperiment.validate()
+            compsToExperiment.repaint()
+    }
+end FlowLayoutDemo
+
+object FlowLayoutDemo extends SimpleSwingApplication:
+    /* Use an appropriate Look and Feel */
+    // TD UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel")
+    /* Turn off metal's use of bold fonts */
+    // TD UIManager.put("swing.boldMetal", false)
+    lazy val top = new MainFrame():
+        title = "FlowLayoutDemo"
+        contents = new FlowLayoutDemo()
+end FlowLayoutDemo

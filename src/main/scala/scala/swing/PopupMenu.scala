@@ -42,30 +42,29 @@ import javax.swing.event.{PopupMenuEvent, PopupMenuListener}
  * @author Ingo Maier
  * @see javax.swing.JPopupMenu
  */
-class PopupMenu extends Component with SequentialContainer.Wrapper with Publisher {
-  override lazy val peer: JPopupMenu = new JPopupMenu with SuperMixin 
+class PopupMenu extends Component with SequentialContainer.Wrapper with Publisher:
+    override lazy val peer: JPopupMenu = new JPopupMenu with SuperMixin
 
-  peer.addPopupMenuListener(new PopupMenuListener {
-  	def popupMenuCanceled(e: PopupMenuEvent): Unit =
-  	  publish(event.PopupMenuCanceled(PopupMenu.this))
+    peer.addPopupMenuListener(new PopupMenuListener:
+        def popupMenuCanceled(e: PopupMenuEvent): Unit =
+            publish(event.PopupMenuCanceled(PopupMenu.this))
 
-  	def popupMenuWillBecomeInvisible(e: PopupMenuEvent): Unit =
-  	  publish(event.PopupMenuWillBecomeInvisible(PopupMenu.this))
+        def popupMenuWillBecomeInvisible(e: PopupMenuEvent): Unit =
+            publish(event.PopupMenuWillBecomeInvisible(PopupMenu.this))
 
-  	def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit =
-  	  publish(event.PopupMenuWillBecomeVisible(PopupMenu.this))
-  })
+        def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit =
+            publish(event.PopupMenuWillBecomeVisible(PopupMenu.this))
+    )
 
-  def show(invoker: Component, x: Int, y: Int): Unit = peer.show(invoker.peer, x, y)
+    def show(invoker: Component, x: Int, y: Int): Unit = peer.show(invoker.peer, x, y)
 
-  def margin: Insets = peer.getMargin
-  
-  def label: String = peer.getLabel
-  def label_=(s: String): Unit = peer.setLabel(s)
+    def margin: Insets = peer.getMargin
 
-  /** Lays out the popup menu so that it uses the minimum space
+    def label: String            = peer.getLabel
+    def label_=(s: String): Unit = peer.setLabel(s)
+
+    /** Lays out the popup menu so that it uses the minimum space
     * needed to display its contents.
     */
-  def pack(): Unit = peer.pack()
-}
-
+    def pack(): Unit = peer.pack()
+end PopupMenu

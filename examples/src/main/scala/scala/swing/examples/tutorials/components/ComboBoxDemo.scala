@@ -31,66 +31,62 @@
 
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.SelectionChanged
-import java.awt.{ Dimension, Font }
+import java.awt.{Dimension, Font}
 import javax.swing.BorderFactory
 
 /*
  * Tutorial: How to Use Combo Boxes
  * [[http://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html]]
- * 
+ *
  * Source code reference:
  * http://docs.oracle.com/javase/tutorial/uiswing/examples/components/ComboBoxDemoProject/src/components/ComboBoxDemo.java
  */
-class ComboBoxDemo extends BorderPanel {
+class ComboBoxDemo extends BorderPanel:
 
-  val petStrings: Array[String] = Array("Bird", "Cat", "Dog", "Rabbit", "Pig")
+    val petStrings: Array[String] = Array("Bird", "Cat", "Dog", "Rabbit", "Pig")
 
-  //Create the combo box, select the item at index 4.
-  //Indices start at 0, so 4 specifies the pig.
-  val petList = new ComboBox[String](petStrings) {
-    selection.item = petStrings(4)
-  }
+    // Create the combo box, select the item at index 4.
+    // Indices start at 0, so 4 specifies the pig.
+    val petList = new ComboBox[String](petStrings):
+        selection.item = petStrings(4)
 
-  //Set up the picture label.
-  val imgIcon = ComboBoxDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/${petList.selection.item}.gif")
+    // Set up the picture label.
+    val imgIcon = ComboBoxDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/${petList.selection.item}.gif")
 
-  val picture = new Label() {
-    icon = imgIcon.getOrElse( Swing.EmptyIcon )
-    font = font.deriveFont(Font.ITALIC)
-    horizontalAlignment = Alignment.Center
-    //The preferred size is hard-coded to be the width of the
-    //widest image and the height of the tallest image + the border.
-    //A real program would compute this.
-    preferredSize = new Dimension(177, 122 + 10)
-  }
-  updateLabel(petList.selection.item)
+    val picture = new Label():
+        icon = imgIcon.getOrElse(Swing.EmptyIcon)
+        font = font.deriveFont(Font.ITALIC)
+        horizontalAlignment = Alignment.Center
+        // The preferred size is hard-coded to be the width of the
+        // widest image and the height of the tallest image + the border.
+        // A real program would compute this.
+        preferredSize = new Dimension(177, 122 + 10)
+    updateLabel(petList.selection.item)
 
-  layout(petList) = BorderPanel.Position.East
-  layout(picture) = BorderPanel.Position.Center
-  border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
+    layout(petList) = BorderPanel.Position.East
+    layout(picture) = BorderPanel.Position.Center
+    border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
 
-  listenTo(petList.selection)
-  reactions += {
-    case SelectionChanged(`petList`) => updateLabel(petList.selection.item)
-  }
+    listenTo(petList.selection)
+    reactions += {
+        case SelectionChanged(`petList`) => updateLabel(petList.selection.item)
+    }
 
-  def updateLabel(s: String): Unit = {
-    val ic = ComboBoxDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/$s.gif")
-    picture.icon = imgIcon.getOrElse( Swing.EmptyIcon )
-  }
-}
+    def updateLabel(s: String): Unit =
+        val ic = ComboBoxDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/$s.gif")
+        picture.icon = imgIcon.getOrElse(Swing.EmptyIcon)
+end ComboBoxDemo
 
-object ComboBoxDemo extends SimpleSwingApplication {
+object ComboBoxDemo extends SimpleSwingApplication:
 
-  /** Returns an ImageIcon, or null if the path was invalid. */
-  def createImageIcon(path: String ): Option[javax.swing.ImageIcon] =
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+    /** Returns an ImageIcon, or null if the path was invalid. */
+    def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
 
-  lazy val top = new MainFrame() {
-    title = "ComboBoxDemo"
-    //Create and set up the content pane.
-    contents = new ComboBoxDemo()
-  }
-}
+    lazy val top = new MainFrame():
+        title = "ComboBoxDemo"
+        // Create and set up the content pane.
+        contents = new ComboBoxDemo()
+end ComboBoxDemo

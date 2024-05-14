@@ -15,42 +15,43 @@ package scala.swing
 import scala.collection.mutable
 import scala.swing.event.Event
 
-object Reactions {
-  class Impl extends Reactions {
-    private val parts: mutable.Buffer[Reaction] = new mutable.ListBuffer[Reaction]
-    def isDefinedAt(e: Event): Boolean = parts.exists(_ isDefinedAt e)
-    def += (r: Reaction): this.type = { parts += r; this }
-    def -= (r: Reaction): this.type = { parts -= r; this }
-    def apply(e: Event): Unit = {
-      for (p <- parts) if (p isDefinedAt e) p(e)
-    }
-  }
+object Reactions:
+    class Impl extends Reactions:
+        private val parts: mutable.Buffer[Reaction] = new mutable.ListBuffer[Reaction]
+        def isDefinedAt(e: Event): Boolean          = parts.exists(_ isDefinedAt e)
+        def +=(r: Reaction): this.type =
+            parts += r; this
+        def -=(r: Reaction): this.type =
+            parts -= r; this
+        def apply(e: Event): Unit =
+            for p <- parts do if p isDefinedAt e then p(e)
+    end Impl
 
-  type Reaction = PartialFunction[Event, Unit]
+    type Reaction = PartialFunction[Event, Unit]
 
-  /**
+    /**
    * A Reaction implementing this trait is strongly referenced in the reaction list
    */
-  trait StronglyReferenced
+    trait StronglyReferenced
 
-  class Wrapper(listener: Any)(r: Reaction) extends Reaction with StronglyReferenced with Proxy {
-    def self: Any = listener
-    def isDefinedAt(e: Event): Boolean = r.isDefinedAt(e)
-    def apply(e: Event): Unit = r(e)
-  }
-}
+    class Wrapper(listener: Any)(r: Reaction) extends Reaction with StronglyReferenced with Proxy:
+        def self: Any                      = listener
+        def isDefinedAt(e: Event): Boolean = r.isDefinedAt(e)
+        def apply(e: Event): Unit          = r(e)
+    end Wrapper
+end Reactions
 
 /**
  * Used by reactors to let clients register custom event reactions.
  */
-abstract class Reactions extends Reactions.Reaction {
-  /**
+abstract class Reactions extends Reactions.Reaction:
+    /**
    * Add a reaction.
    */
-  def += (r: Reactions.Reaction): this.type
+    def +=(r: Reactions.Reaction): this.type
 
-  /**
+    /**
    * Remove the given reaction.
    */
-  def -= (r: Reactions.Reaction): this.type
-}
+    def -=(r: Reactions.Reaction): this.type
+end Reactions

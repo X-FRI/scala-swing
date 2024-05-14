@@ -21,7 +21,6 @@ import javax.swing.JRadioButton
  *
  * @see javax.swing.JRadioButton
  */
-class RadioButton(text0: String) extends ToggleButton {
-  override lazy val peer: JRadioButton = new JRadioButton(text0) with SuperMixin
-  def this() = this("")
-}
+class RadioButton(text0: String) extends ToggleButton:
+    override lazy val peer: JRadioButton = new JRadioButton(text0) with SuperMixin
+    def this() = this("")

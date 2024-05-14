@@ -30,9 +30,9 @@
  */
 package scala.swing.examples.tutorials.layout
 
-import scala.swing._
+import scala.swing.*
 import javax.swing.UIManager
-import java.awt.{ ComponentOrientation, Dimension }
+import java.awt.{ComponentOrientation, Dimension}
 
 /**
  * Tutorials: How to Use BorderLayout
@@ -41,34 +41,31 @@ import java.awt.{ ComponentOrientation, Dimension }
  * Source code reference:
  * [[http://docs.oracle.com/javase/tutorial/uiswing/examples/layout/BorderLayoutDemoProject/src/layout/BorderLayoutDemo.java]]
  */
-class BorderLayoutDemo extends BorderPanel {
-  if (BorderLayoutDemo.RightToLeft) {
-    componentOrientation = ComponentOrientation.RIGHT_TO_LEFT
-  }
-  val button1 = new Button("Button 1 (PAGE_START)")
-  val button2 = new Button("Button 2 (CENTER)") {
-    preferredSize = new Dimension(200, 100)
-  }
-  val button3 = new Button("Button 3 (LINE_START)")
-  val button4 = new Button("Long-Named Button 4 (LINE_END)")
-  val button5 = new Button("5 (PAGE_END)")
-  
-  layout(button1) = BorderPanel.Position.North
-  layout(button2) = BorderPanel.Position.Center
-  layout(button3) = BorderPanel.Position.West
-  layout(button4) = BorderPanel.Position.East
-  layout(button5) = BorderPanel.Position.South
-}
+class BorderLayoutDemo extends BorderPanel:
+    if BorderLayoutDemo.RightToLeft then
+        componentOrientation = ComponentOrientation.RIGHT_TO_LEFT
+    val button1 = new Button("Button 1 (PAGE_START)")
+    val button2 = new Button("Button 2 (CENTER)"):
+        preferredSize = new Dimension(200, 100)
+    val button3 = new Button("Button 3 (LINE_START)")
+    val button4 = new Button("Long-Named Button 4 (LINE_END)")
+    val button5 = new Button("5 (PAGE_END)")
 
-object BorderLayoutDemo extends SimpleSwingApplication {
-  val RightToLeft = true
-  /* Use an appropriate Look and Feel */
-  // UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel")
-  /* Turn off metal's use bold fonts */
-  //TD UIManager.put("swing.boldMetal", false)
-  //Create and set up the window.
-  lazy val top = new MainFrame {
-    title = "BorderLayoutDemo"
-    contents = new BorderLayoutDemo()
-  }
-}
+    layout(button1) = BorderPanel.Position.North
+    layout(button2) = BorderPanel.Position.Center
+    layout(button3) = BorderPanel.Position.West
+    layout(button4) = BorderPanel.Position.East
+    layout(button5) = BorderPanel.Position.South
+end BorderLayoutDemo
+
+object BorderLayoutDemo extends SimpleSwingApplication:
+    val RightToLeft = true
+    /* Use an appropriate Look and Feel */
+    // UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel")
+    /* Turn off metal's use bold fonts */
+    // TD UIManager.put("swing.boldMetal", false)
+    // Create and set up the window.
+    lazy val top = new MainFrame:
+        title = "BorderLayoutDemo"
+        contents = new BorderLayoutDemo()
+end BorderLayoutDemo

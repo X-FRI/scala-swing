@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 import java.awt.Dimension
 
 /**
@@ -42,18 +42,15 @@ import java.awt.Dimension
  *
  * FrameDemo.scala requires no other files.
  */
-object FrameDemo extends SimpleSwingApplication {
-  /**
+object FrameDemo extends SimpleSwingApplication:
+    /**
    * Create the GUI and show it.
    */
-  lazy val top = new MainFrame() {
-    title = "FrameDemo"
-    val emptylabel = new Label("") {
-      preferredSize = new Dimension(175, 100)
-    }
-    //Create and set up the content pane.
-    contents = new BorderPanel() {
-      layout(emptylabel) = BorderPanel.Position.Center
-    }
-  }
-}
+    lazy val top = new MainFrame():
+        title = "FrameDemo"
+        val emptylabel = new Label(""):
+            preferredSize = new Dimension(175, 100)
+        // Create and set up the content pane.
+        contents = new BorderPanel():
+            layout(emptylabel) = BorderPanel.Position.Center
+end FrameDemo

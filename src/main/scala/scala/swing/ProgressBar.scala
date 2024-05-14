@@ -21,29 +21,29 @@ import javax.swing.JProgressBar
  *
  * @see javax.swing.JProgressBar
  */
-class ProgressBar extends Component with Orientable {
-  override lazy val peer: JProgressBar =
-    new javax.swing.JProgressBar with SuperMixin
+class ProgressBar extends Component with Orientable:
+    override lazy val peer: JProgressBar =
+        new javax.swing.JProgressBar with SuperMixin
 
-  def min: Int = peer.getMinimum
-  def min_=(v: Int): Unit = peer.setMinimum(v)
-  def max: Int = peer.getMaximum
-  def max_=(v: Int): Unit = peer.setMaximum(v)
-  def value: Int = peer.getValue
-  def value_=(v: Int): Unit = peer.setValue(v)
+    def min: Int              = peer.getMinimum
+    def min_=(v: Int): Unit   = peer.setMinimum(v)
+    def max: Int              = peer.getMaximum
+    def max_=(v: Int): Unit   = peer.setMaximum(v)
+    def value: Int            = peer.getValue
+    def value_=(v: Int): Unit = peer.setValue(v)
 
-  def labelPainted: Boolean = peer.isStringPainted
-  def labelPainted_=(v: Boolean): Unit = peer.setStringPainted(v)
+    def labelPainted: Boolean            = peer.isStringPainted
+    def labelPainted_=(v: Boolean): Unit = peer.setStringPainted(v)
 
-  def label: String = peer.getString
-  def label_=(v: String): Unit = peer.setString(v)
+    def label: String            = peer.getString
+    def label_=(v: String): Unit = peer.setString(v)
 
-  def indeterminate: Boolean = peer.isIndeterminate
-  def indeterminate_=(v: Boolean): Unit = peer.setIndeterminate(v)
+    def indeterminate: Boolean            = peer.isIndeterminate
+    def indeterminate_=(v: Boolean): Unit = peer.setIndeterminate(v)
 
-  def paintBorder: Boolean = peer.isBorderPainted
-  def paintBorder(v: Boolean): Unit = peer.setBorderPainted(v)
+    def paintBorder: Boolean          = peer.isBorderPainted
+    def paintBorder(v: Boolean): Unit = peer.setBorderPainted(v)
 
-  def orientation     : Orientation.Value         = Orientation(peer.getOrientation())
-  def orientation_= (o: Orientation.Value): Unit  = peer.setOrientation(o.id)
-}
+    def orientation: Orientation.Value            = Orientation(peer.getOrientation())
+    def orientation_=(o: Orientation.Value): Unit = peer.setOrientation(o.id)
+end ProgressBar

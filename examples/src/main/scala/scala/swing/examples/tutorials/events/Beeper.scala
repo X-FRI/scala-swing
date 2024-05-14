@@ -30,9 +30,9 @@
  */
 package scala.swing.examples.tutorials.events
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.ButtonClicked
-import java.awt.{Dimension,Toolkit }
+import java.awt.{Dimension, Toolkit}
 
 /**
  * Tutorial: Introduction to Event Listeners
@@ -43,23 +43,20 @@ import java.awt.{Dimension,Toolkit }
  * 
  * Beeper.scala requires no other files.
  */
-class Beeper extends BorderPanel {
-  val button = new Button("Click Me") {
-    preferredSize = new Dimension(200, 80)
-  }
-  layout(button) = BorderPanel.Position.Center
-  listenTo(button)
-  reactions += {
-    case ButtonClicked(`button`) =>
-      Toolkit.getDefaultToolkit().beep()
-  }
-  
-}
+class Beeper extends BorderPanel:
+    val button = new Button("Click Me"):
+        preferredSize = new Dimension(200, 80)
+    layout(button) = BorderPanel.Position.Center
+    listenTo(button)
+    reactions += {
+        case ButtonClicked(`button`) =>
+            Toolkit.getDefaultToolkit().beep()
+    }
+end Beeper
 
-object Beeper extends SimpleSwingApplication {
-  //Create and set up the window.
-  lazy val top = new MainFrame {
-    title = "Beeper"
-    contents = new Beeper()
-  }
-}
+object Beeper extends SimpleSwingApplication:
+    // Create and set up the window.
+    lazy val top = new MainFrame:
+        title = "Beeper"
+        contents = new Beeper()
+end Beeper

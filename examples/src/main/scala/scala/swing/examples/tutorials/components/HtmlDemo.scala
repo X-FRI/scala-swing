@@ -30,9 +30,9 @@
  */
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.ButtonClicked
-import java.awt.{ Component, Dimension }
+import java.awt.{Component, Dimension}
 import scala.swing.event.Key
 
 /**
@@ -44,62 +44,56 @@ import scala.swing.event.Key
  *
  * HtmlDemo.scala needs no other files.
  */
-class HtmlDemo extends BoxPanel(Orientation.Horizontal) {
-  val initialText = "<html>\n" +
-                "Color and font test:\n" +
-                "<ul>\n" +
-                "<li><font color=red>red</font>\n" +
-                "<li><font color=blue>blue</font>\n" +
-                "<li><font color=green>green</font>\n" +
-                "<li><font size=-2>small</font>\n" +
-                "<li><font size=+2>large</font>\n" +
-                "<li><i>italic</i>\n" +
-                "<li><b>bold</b>\n" +
-                "</ul>\n"
-  val htmlTextArea = new TextArea(10, 20) {
-    text = initialText
-  }
-  val scrollPane = new ScrollPane(htmlTextArea)
-  val changeTheLabel = new Button("Change the label") {
-    mnemonic = Key.C
-    xLayoutAlignment = Component.CENTER_ALIGNMENT
-  }
-  val theLabel = new Label(initialText) {
-    minimumSize = new Dimension(200, 200)
-    preferredSize = new Dimension(200, 200)
-    maximumSize = new Dimension(200, 200)
-    verticalAlignment = Alignment.Center
-    horizontalAlignment = Alignment.Center
-  }
-  
-  val leftPanel = new BoxPanel(Orientation.Vertical) {
-    border = Swing.CompoundBorder(
-        Swing.TitledBorder(Swing.EmptyBorder, "Edit the HTML, then click the button"),
-        Swing.EmptyBorder(10, 10, 10, 10))
-    contents ++= Array( scrollPane, Swing.RigidBox(new Dimension(0, 10)), changeTheLabel )
-  }
-  
-  val rightPanel = new BoxPanel(Orientation.Vertical) {
-    border = Swing.CompoundBorder(
-        Swing.TitledBorder(Swing.EmptyBorder, "A label with HTML"),
-        Swing.EmptyBorder(10, 10, 10, 10))
-    contents += theLabel
-  }
-  
-  border = Swing.EmptyBorder(10, 10, 10, 10)
-  contents += leftPanel
-  contents += rightPanel
-  
-  listenTo(changeTheLabel)
-  reactions += {
-    case ButtonClicked(`changeTheLabel`) => theLabel.text = htmlTextArea.text
-  }
-}
+class HtmlDemo extends BoxPanel(Orientation.Horizontal):
+    val initialText = "<html>\n" +
+        "Color and font test:\n" +
+        "<ul>\n" +
+        "<li><font color=red>red</font>\n" +
+        "<li><font color=blue>blue</font>\n" +
+        "<li><font color=green>green</font>\n" +
+        "<li><font size=-2>small</font>\n" +
+        "<li><font size=+2>large</font>\n" +
+        "<li><i>italic</i>\n" +
+        "<li><b>bold</b>\n" +
+        "</ul>\n"
+    val htmlTextArea = new TextArea(10, 20):
+        text = initialText
+    val scrollPane = new ScrollPane(htmlTextArea)
+    val changeTheLabel = new Button("Change the label"):
+        mnemonic = Key.C
+        xLayoutAlignment = Component.CENTER_ALIGNMENT
+    val theLabel = new Label(initialText):
+        minimumSize = new Dimension(200, 200)
+        preferredSize = new Dimension(200, 200)
+        maximumSize = new Dimension(200, 200)
+        verticalAlignment = Alignment.Center
+        horizontalAlignment = Alignment.Center
 
-object HtmlDemo extends SimpleSwingApplication {
-  lazy val top = new MainFrame() {
-    title = "HtmlDemo"
-    //Create and set up the content pane.
-    contents = new HtmlDemo()
-  }
-}
+    val leftPanel = new BoxPanel(Orientation.Vertical):
+        border = Swing.CompoundBorder(
+            Swing.TitledBorder(Swing.EmptyBorder, "Edit the HTML, then click the button"),
+            Swing.EmptyBorder(10, 10, 10, 10))
+        contents ++= Array(scrollPane, Swing.RigidBox(new Dimension(0, 10)), changeTheLabel)
+
+    val rightPanel = new BoxPanel(Orientation.Vertical):
+        border = Swing.CompoundBorder(
+            Swing.TitledBorder(Swing.EmptyBorder, "A label with HTML"),
+            Swing.EmptyBorder(10, 10, 10, 10))
+        contents += theLabel
+
+    border = Swing.EmptyBorder(10, 10, 10, 10)
+    contents += leftPanel
+    contents += rightPanel
+
+    listenTo(changeTheLabel)
+    reactions += {
+        case ButtonClicked(`changeTheLabel`) => theLabel.text = htmlTextArea.text
+    }
+end HtmlDemo
+
+object HtmlDemo extends SimpleSwingApplication:
+    lazy val top = new MainFrame():
+        title = "HtmlDemo"
+        // Create and set up the content pane.
+        contents = new HtmlDemo()
+end HtmlDemo

@@ -32,37 +32,34 @@
 package scala.swing.examples.tutorials.components
 
 import java.awt.Toolkit
-import javax.swing.text.{ AttributeSet, DocumentFilter }
+import javax.swing.text.{AttributeSet, DocumentFilter}
 
 /* A 1.4 class used by TextComponentDemo.scala. */
 
-class DocumentSizeFilter(val maxCharacters: Int) extends DocumentFilter {
-  val Debug: Boolean = false
+class DocumentSizeFilter(val maxCharacters: Int) extends DocumentFilter:
+    val Debug: Boolean = false
 
-  override def insertString(fb: DocumentFilter.FilterBypass, offs: Int, str: String, a: AttributeSet): Unit = {
-    //This rejects the entire insertion if it would make
-    //the contents too long. Another option would be
-    //to truncate the inserted string so the contents
-    //would be exactly maxCharacters in length.
-    if ((fb.getDocument.getLength + str.length) <= maxCharacters) {
-      super.insertString(fb, offs, str, a)
-    } else {
-      Toolkit.getDefaultToolkit.beep()
-    }
-  }
+    override def insertString(fb: DocumentFilter.FilterBypass, offs: Int, str: String, a: AttributeSet): Unit =
+        // This rejects the entire insertion if it would make
+        // the contents too long. Another option would be
+        // to truncate the inserted string so the contents
+        // would be exactly maxCharacters in length.
+        if (fb.getDocument.getLength + str.length) <= maxCharacters then
+            super.insertString(fb, offs, str, a)
+        else
+            Toolkit.getDefaultToolkit.beep()
 
-  def replaceString(fb: DocumentFilter.FilterBypass, offs: Int, length: Int, str: String, a: AttributeSet): Unit = {
-    if (Debug) {
-      println("in DocumentSizeFilter's replace method")
-    }
-    //This rejects the entire replacement if it would make
-    //the contents too long. Another option would be
-    //to truncate the replacement string so the contents
-    //would be exactly maxCharacters in length.
-    if ((fb.getDocument.getLength + str.length - length) <= maxCharacters) {
-      super.replace(fb, offs, length, str, a)
-    } else {
-      Toolkit.getDefaultToolkit.beep()
-    }
-  }
-}
+    def replaceString(fb: DocumentFilter.FilterBypass, offs: Int, length: Int, str: String, a: AttributeSet): Unit =
+        if Debug then
+            println("in DocumentSizeFilter's replace method")
+        // This rejects the entire replacement if it would make
+        // the contents too long. Another option would be
+        // to truncate the replacement string so the contents
+        // would be exactly maxCharacters in length.
+        if (fb.getDocument.getLength + str.length - length) <= maxCharacters then
+            super.replace(fb, offs, length, str, a)
+        else
+            Toolkit.getDefaultToolkit.beep()
+        end if
+    end replaceString
+end DocumentSizeFilter

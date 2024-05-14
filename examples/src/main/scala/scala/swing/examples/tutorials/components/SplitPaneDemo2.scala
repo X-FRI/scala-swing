@@ -33,7 +33,7 @@ package scala.swing.examples.tutorials.components
 
 import java.awt.Font
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.SelectionChanged
 import javax.swing.ImageIcon
 
@@ -48,112 +48,105 @@ import javax.swing.ImageIcon
  * SplitPaneDemo2.scala uses
  *   SplitPaneDemo.scala
  */
-class SplitPaneDemo2 extends MainFrame {
-  title = "SplitPaneDemo2"
+class SplitPaneDemo2 extends MainFrame:
+    title = "SplitPaneDemo2"
 
-  //Create an instance of SplitPaneDemo.
-  val splitPaneDemo = new SplitPaneDemo()
-  val top: SplitPane = splitPaneDemo.splitPane
-  val listMe: ListView[String] = splitPaneDemo.imageList
-  
-  //XXXX: Bug #4131528, borders on nested split panes accumulate.
-  //Workaround: Set the border on any split pane within
-  //another split pane to null. Components within nested split
-  //panes need to have their own border for this to work well.
-  top.border = null
-  
-  //Create a regular old label
-  val label = new Label("Click on an image name in the list.") {
-    horizontalAlignment = Alignment.Center
-  }
-  
-  //Create a split pane and put "top" (a split pane)
-  //and JLabel instance in it.
-  //Use Orientation.Horizontal to get a top/bottom split pane.
-  val splitPane = new SplitPane(Orientation.Horizontal, top, label) {
-    oneTouchExpandable = true
-    dividerLocation = 180
-  }
-  
-  //Provide minimum sizes for the two components in the split pane
-  top.minimumSize = new Dimension(100, 50)
-  label.minimumSize = new Dimension(100, 30)
-  
-  //Add the split pane to this frame
-  contents = splitPane
-  
-  listenTo(splitPaneDemo.imageList.selection)
-  
-  reactions += {
-    case (e: SelectionChanged) => 
-      val theList: ListView[String] = e.source.asInstanceOf[ListView[String]]
-      if (!theList.selection.adjusting) {
-        if (theList.selection.leadIndex < 0)
-          label.text = "Nothing selected."
-      } else {
-          val index = theList.selection.leadIndex
-          label.text = s"Selected image number $index"
-      }
-  }
+    // Create an instance of SplitPaneDemo.
+    val splitPaneDemo            = new SplitPaneDemo()
+    val top: SplitPane           = splitPaneDemo.splitPane
+    val listMe: ListView[String] = splitPaneDemo.imageList
 
-}
+    // XXXX: Bug #4131528, borders on nested split panes accumulate.
+    // Workaround: Set the border on any split pane within
+    // another split pane to null. Components within nested split
+    // panes need to have their own border for this to work well.
+    top.border = null
 
-object SplitPaneDemo2 extends SimpleSwingApplication {
-  def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+    // Create a regular old label
+    val label = new Label("Click on an image name in the list."):
+        horizontalAlignment = Alignment.Center
 
-  lazy val top = new SplitPaneDemo2()
-}
+    // Create a split pane and put "top" (a split pane)
+    // and JLabel instance in it.
+    // Use Orientation.Horizontal to get a top/bottom split pane.
+    val splitPane = new SplitPane(Orientation.Horizontal, top, label):
+        oneTouchExpandable = true
+        dividerLocation = 180
 
+    // Provide minimum sizes for the two components in the split pane
+    top.minimumSize = new Dimension(100, 50)
+    label.minimumSize = new Dimension(100, 30)
 
+    // Add the split pane to this frame
+    contents = splitPane
 
-class SplitPaneDemo extends FlowPanel {
-  val imageNames: Array[String] = Array("Bird", "Cat", "Dog", "Rabbit", "Pig",
-    "dukeWaveRed", "kathyCosmo", "left", "middle", "right", "stickerface")
+    listenTo(splitPaneDemo.imageList.selection)
 
-  //Create the list of images and put it in a scroll pane.
-  val imageList = new ListView[String](imageNames)
-  imageList.selection.intervalMode = ListView.IntervalMode.Single
-  imageList.selectIndices(0)
-
-  val listScrollPane = new ScrollPane(imageList) {
-    minimumSize = new Dimension(100, 50)
-  }
-
-  val picture = new Label() {
-    horizontalAlignment = Alignment.Center
-  }
-  picture.font = font.deriveFont(Font.ITALIC)
-  val pictureScrollPane = new ScrollPane(picture) {
-    minimumSize = new Dimension(400, 200)
-  }
-
-  //Create a split pane with the two scroll panes in it.
-  //Use Orientation.Vertical to get a left/right split pane
-  val splitPane = new SplitPane(Orientation.Vertical, listScrollPane, pictureScrollPane) {
-    oneTouchExpandable = true
-    dividerLocation = 150
-  }
-
-  updateLabel(imageNames(imageList.selection.leadIndex))
-
-  listenTo(imageList.selection)
-
-  reactions += {
-    case SelectionChanged(`imageList`) =>
-      updateLabel(imageNames(imageList.selection.leadIndex))
-  }
-
-  //Renders the selected image
-  def updateLabel (name: String): Unit = {
-    val icon: Option[ImageIcon] = SplitPaneDemo2.createImageIcon("/scala/swing/examples/tutorials/images/" + name + ".gif")
-    if  (icon.isDefined) {
-      picture.text = null
-      picture.icon = icon.get
-    } else {
-      picture.text = "Image not found"
-      picture.icon = null
+    reactions += {
+        case (e: SelectionChanged) =>
+            val theList: ListView[String] = e.source.asInstanceOf[ListView[String]]
+            if !theList.selection.adjusting then
+                if theList.selection.leadIndex < 0 then
+                    label.text = "Nothing selected."
+            else {
+                val index = theList.selection.leadIndex
+                label.text = s"Selected image number $index"
+            }
+            end if
     }
-  }
+end SplitPaneDemo2
 
-}
+object SplitPaneDemo2 extends SimpleSwingApplication:
+    def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+
+    lazy val top = new SplitPaneDemo2()
+end SplitPaneDemo2
+
+class SplitPaneDemo extends FlowPanel:
+    val imageNames: Array[String] = Array("Bird", "Cat", "Dog", "Rabbit", "Pig",
+        "dukeWaveRed", "kathyCosmo", "left", "middle", "right", "stickerface")
+
+    // Create the list of images and put it in a scroll pane.
+    val imageList = new ListView[String](imageNames)
+    imageList.selection.intervalMode = ListView.IntervalMode.Single
+    imageList.selectIndices(0)
+
+    val listScrollPane = new ScrollPane(imageList):
+        minimumSize = new Dimension(100, 50)
+
+    val picture = new Label():
+        horizontalAlignment = Alignment.Center
+    picture.font = font.deriveFont(Font.ITALIC)
+    val pictureScrollPane = new ScrollPane(picture):
+        minimumSize = new Dimension(400, 200)
+
+    // Create a split pane with the two scroll panes in it.
+    // Use Orientation.Vertical to get a left/right split pane
+    val splitPane = new SplitPane(Orientation.Vertical, listScrollPane, pictureScrollPane):
+        oneTouchExpandable = true
+        dividerLocation = 150
+
+    updateLabel(imageNames(imageList.selection.leadIndex))
+
+    listenTo(imageList.selection)
+
+    reactions += {
+        case SelectionChanged(`imageList`) =>
+            updateLabel(imageNames(imageList.selection.leadIndex))
+    }
+
+    // Renders the selected image
+    def updateLabel(name: String): Unit =
+        val icon: Option[ImageIcon] =
+            SplitPaneDemo2.createImageIcon("/scala/swing/examples/tutorials/images/" + name + ".gif")
+        if icon.isDefined then
+            picture.text = null
+            picture.icon = icon.get
+        else {
+            picture.text = "Image not found"
+            picture.icon = null
+        }
+        end if
+    end updateLabel
+end SplitPaneDemo

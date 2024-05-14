@@ -30,10 +30,10 @@
  */
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.Swing.EmptyIcon
 import scala.swing.event.ColorChanged
-import java.awt.{ Color, Dimension, Font }
+import java.awt.{Color, Dimension, Font}
 
 /**
  * Tutorial: How to Use Color Choosers
@@ -42,37 +42,33 @@ import java.awt.{ Color, Dimension, Font }
  * Source code reference:
  * [[http://docs.oracle.com/javase/tutorial/uiswing/examples/components/ColorChooserDemoProject/src/components/ColorChooserDemo.java]]
  */
-class ColorChooserDemo extends BorderPanel {
-  //Set up the banner at the top of the window
-  val banner = new Label("Welcome to the Scala-Swing Zone!", EmptyIcon, Alignment.Center) {
-    foreground = Color.yellow
-    background = Color.blue
-    opaque = true
-    font = new Font("SansSerif", Font.BOLD, 24)
-    preferredSize = new Dimension(100, 65)
-  }
+class ColorChooserDemo extends BorderPanel:
+    // Set up the banner at the top of the window
+    val banner = new Label("Welcome to the Scala-Swing Zone!", EmptyIcon, Alignment.Center):
+        foreground = Color.yellow
+        background = Color.blue
+        opaque = true
+        font = new Font("SansSerif", Font.BOLD, 24)
+        preferredSize = new Dimension(100, 65)
 
-  val bannerPanel = new BorderPanel() {
-    layout(banner) = BorderPanel.Position.Center
-    border = Swing.TitledBorder(Swing.EmptyBorder, "Banner")
-  }
+    val bannerPanel = new BorderPanel():
+        layout(banner) = BorderPanel.Position.Center
+        border = Swing.TitledBorder(Swing.EmptyBorder, "Banner")
 
-  //Set up color chooser for setting text color
-  val tcc: ColorChooser = new ColorChooser(banner.foreground) {
-    border = Swing.TitledBorder(Swing.EmptyBorder, "Choose Text Color")
-    reactions += {
-      case ColorChanged(_, c) => banner.foreground = c
-    }
-  }
+    // Set up color chooser for setting text color
+    val tcc: ColorChooser = new ColorChooser(banner.foreground):
+        border = Swing.TitledBorder(Swing.EmptyBorder, "Choose Text Color")
+        reactions += {
+            case ColorChanged(_, c) => banner.foreground = c
+        }
 
-  layout(bannerPanel) = BorderPanel.Position.Center
-  layout(tcc) = BorderPanel.Position.South
-}
+    layout(bannerPanel) = BorderPanel.Position.Center
+    layout(tcc) = BorderPanel.Position.South
+end ColorChooserDemo
 
-object ColorChooserDemo extends SimpleSwingApplication {
-  lazy val top = new MainFrame() {
-    title = "ColorChooserDemo"
-    //Create and set up the content pane.
-    contents = new ColorChooserDemo()
-  }
-}
+object ColorChooserDemo extends SimpleSwingApplication:
+    lazy val top = new MainFrame():
+        title = "ColorChooserDemo"
+        // Create and set up the content pane.
+        contents = new ColorChooserDemo()
+end ColorChooserDemo

@@ -4,68 +4,65 @@ import javax.swing.JDesktopPane
 
 import scala.collection.immutable
 
-
 /**
  * A pane that can host nested internal windows (represented by [[InternalFrame]]).
  */
-class DesktopPane extends Component with SequentialContainer.Wrapper {
-  import DesktopPane._
+class DesktopPane extends Component with SequentialContainer.Wrapper:
+    import DesktopPane.*
 
-  override lazy val peer : JDesktopPane = new JDesktopPane with SuperMixin
+    override lazy val peer: JDesktopPane = new JDesktopPane with SuperMixin
 
-  /**
+    /**
    * Returns all internal frames in this pane, including iconified ones.
    *
    * @return a list of internal frames.
    */
-  def frames : immutable.Seq[InternalFrame] =
-    peer.getAllFrames.toSeq.view.map(UIElement.cachedWrapper[InternalFrame]).toVector
+    def frames: immutable.Seq[InternalFrame] =
+        peer.getAllFrames.toSeq.view.map(UIElement.cachedWrapper[InternalFrame]).toVector
 
-  /**
+    /**
    * Returns the currently selected frame, if one is selected.
    *
    * @return the currently selected frame, or `None` if none is selected.
    */
-  def selectedFrame : Option[InternalFrame] =
-    Option(peer.getSelectedFrame).map(UIElement.cachedWrapper[InternalFrame])
+    def selectedFrame: Option[InternalFrame] =
+        Option(peer.getSelectedFrame).map(UIElement.cachedWrapper[InternalFrame])
 
-  /**
+    /**
    * Indicates how dragged frames will be animated.
    *
    * @return either `LiveDragMode` or `OutlineDragMode`.
    */
-  def dragMode : DragMode = DragMode(peer.getDragMode)
+    def dragMode: DragMode = DragMode(peer.getDragMode)
 
-  /**
+    /**
    * Specifies how dragged frames will be animated.
    *
    * @param newMode either `DragMode.Live` or `DragMode.Outline`.
    */
-  def dragMode_= (newMode : DragMode) : Unit = peer.setDragMode(newMode.id)
-}
+    def dragMode_=(newMode: DragMode): Unit = peer.setDragMode(newMode.id)
+end DesktopPane
 
+object DesktopPane:
 
-object DesktopPane {
-
-  /**
+    /**
    * Supported drag modes for internal frames.
    */
-  //noinspection TypeAnnotation
-  object DragMode extends Enumeration {
-    /**
+    // noinspection TypeAnnotation
+    object DragMode extends Enumeration:
+        /**
      * Renders the contents of the frame while dragging.
      */
-    val Live = Value(JDesktopPane.LIVE_DRAG_MODE)
+        val Live = Value(JDesktopPane.LIVE_DRAG_MODE)
 
-    /**
+        /**
      * Renders only the outline of the frame while dragging.
      */
-    val Outline = Value(JDesktopPane.OUTLINE_DRAG_MODE)
-  }
+        val Outline = Value(JDesktopPane.OUTLINE_DRAG_MODE)
+    end DragMode
 
-  /**
+    /**
    * Type indicating how an internal frame will be animated as it is dragged.
    */
-  type DragMode = DragMode.Value
-
-}
+    type DragMode = DragMode.Value
+end DesktopPane

@@ -32,56 +32,55 @@ import scala.swing.event.EditDone
  *
  * @see javax.swing.JTextField
  */
-class TextField(text0: String, columns0: Int) extends TextComponent with TextComponent.HasColumns with Action.Trigger {
-  override lazy val peer: JTextField = new JTextField(text0, columns0) with SuperMixin
-  def this(text: String) = this(text, 0)
-  def this(columns: Int) = this("", columns)
-  def this() = this("")
+class TextField(text0: String, columns0: Int) extends TextComponent with TextComponent.HasColumns with Action.Trigger:
+    override lazy val peer: JTextField = new JTextField(text0, columns0) with SuperMixin
+    def this(text: String) = this(text, 0)
+    def this(columns: Int) = this("", columns)
+    def this() = this("")
 
-  def columns: Int = peer.getColumns
-  def columns_=(n: Int): Unit = peer.setColumns(n)
+    def columns: Int            = peer.getColumns
+    def columns_=(n: Int): Unit = peer.setColumns(n)
 
-  /** @see javax.swing.JTextField#getHorizontalAlignment() */
-  def horizontalAlignment: Alignment.Value = Alignment(peer.getHorizontalAlignment)
-  /** @see javax.swing.JTextField#setHorizontalAlignment() */
-  def horizontalAlignment_=(x: Alignment.Value): Unit = peer.setHorizontalAlignment(x.id)
+    /** @see javax.swing.JTextField#getHorizontalAlignment() */
+    def horizontalAlignment: Alignment.Value = Alignment(peer.getHorizontalAlignment)
 
-  // TODO: we need an action cache
-  private var _action: Action = Action.NoAction
-  def action: Action = _action
-  def action_=(a: Action): Unit = { _action = a; peer.setAction(a.peer) }
+    /** @see javax.swing.JTextField#setHorizontalAlignment() */
+    def horizontalAlignment_=(x: Alignment.Value): Unit = peer.setHorizontalAlignment(x.id)
 
-  private lazy val actionListener = Swing.ActionListener { _ =>
-    publish(EditDone(TextField.this))
-  }
+    // TODO: we need an action cache
+    private var _action: Action = Action.NoAction
+    def action: Action          = _action
+    def action_=(a: Action): Unit =
+        _action = a; peer.setAction(a.peer)
 
-  protected override def onFirstSubscribe(): Unit = {
-    super.onFirstSubscribe()
-    peer.addActionListener(actionListener)
-    peer.addFocusListener(new FocusAdapter {
-      override def focusLost(e: java.awt.event.FocusEvent): Unit = publish(EditDone(TextField.this))
-    })
-  }
+    private lazy val actionListener = Swing.ActionListener { _ =>
+        publish(EditDone(TextField.this))
+    }
 
-  protected override def onLastUnsubscribe(): Unit = {
-    super.onLastUnsubscribe()
-    peer.removeActionListener(actionListener)
-  }
+    protected override def onFirstSubscribe(): Unit =
+        super.onFirstSubscribe()
+        peer.addActionListener(actionListener)
+        peer.addFocusListener(new FocusAdapter:
+                override def focusLost(e: java.awt.event.FocusEvent): Unit = publish(EditDone(TextField.this))
+        )
+    end onFirstSubscribe
 
-  def verifier: String => Boolean = _ => Option(peer.getInputVerifier) forall (_ verify peer)
-  def verifier_=(v: String => Boolean): Unit = {
-    peer.setInputVerifier(new InputVerifier {
-      private val old = Option(peer.getInputVerifier)
-      def verify(c: JComponent): Boolean = v(text)
-      override def shouldYieldFocus(c: JComponent): Boolean = old forall (_ shouldYieldFocus c)
-    })
-  }
-  def shouldYieldFocus: String => Boolean = _ => Option(peer.getInputVerifier) forall (_ shouldYieldFocus peer)
-  def shouldYieldFocus_=(y: String => Boolean): Unit = {
-    peer.setInputVerifier(new InputVerifier {
-      private val old = peer.getInputVerifier
-      def verify(c: JComponent): Boolean = old.verify(c)
-      override def shouldYieldFocus(c: JComponent): Boolean = y(text)
-    })
-  }
-}
+    protected override def onLastUnsubscribe(): Unit =
+        super.onLastUnsubscribe()
+        peer.removeActionListener(actionListener)
+
+    def verifier: String => Boolean = _ => Option(peer.getInputVerifier) forall (_ verify peer)
+    def verifier_=(v: String => Boolean): Unit =
+        peer.setInputVerifier(new InputVerifier:
+            private val old                                       = Option(peer.getInputVerifier)
+            def verify(c: JComponent): Boolean                    = v(text)
+            override def shouldYieldFocus(c: JComponent): Boolean = old forall (_ shouldYieldFocus c)
+        )
+    def shouldYieldFocus: String => Boolean = _ => Option(peer.getInputVerifier) forall (_ shouldYieldFocus peer)
+    def shouldYieldFocus_=(y: String => Boolean): Unit =
+        peer.setInputVerifier(new InputVerifier:
+            private val old                                       = peer.getInputVerifier
+            def verify(c: JComponent): Boolean                    = old.verify(c)
+            override def shouldYieldFocus(c: JComponent): Boolean = y(text)
+        )
+end TextField

@@ -20,26 +20,26 @@ import scala.collection.mutable
  *
  * @see javax.swing.ButtonGroup
  */
-class ButtonGroup(initialButtons: AbstractButton*) {
-  val peer: javax.swing.ButtonGroup = new javax.swing.ButtonGroup
+class ButtonGroup(initialButtons: AbstractButton*):
+    val peer: javax.swing.ButtonGroup = new javax.swing.ButtonGroup
 
-  val buttons: mutable.Set[AbstractButton] = new SetWrapper[AbstractButton] {
-    override def subtractOne(b: AbstractButton): this.type = { peer.remove(b.peer); this }
-    override def addOne     (b: AbstractButton): this.type = { peer.add   (b.peer); this }
+    val buttons: mutable.Set[AbstractButton] = new SetWrapper[AbstractButton]:
+        override def subtractOne(b: AbstractButton): this.type =
+            peer.remove(b.peer); this
+        override def addOne(b: AbstractButton): this.type =
+            peer.add(b.peer); this
 
-    def contains(b: AbstractButton): Boolean = this.iterator.contains(b)
+        def contains(b: AbstractButton): Boolean = this.iterator.contains(b)
 
-    override def size: Int = peer.getButtonCount
+        override def size: Int = peer.getButtonCount
 
-    def iterator: Iterator[AbstractButton] = new Iterator[AbstractButton] {
-      private val elements = peer.getElements
-      def next(): AbstractButton = UIElement.cachedWrapper[AbstractButton](elements.nextElement())
-      def hasNext: Boolean = elements.hasMoreElements
-    }
-  }
-  buttons ++= initialButtons
+        def iterator: Iterator[AbstractButton] = new Iterator[AbstractButton]:
+            private val elements       = peer.getElements
+            def next(): AbstractButton = UIElement.cachedWrapper[AbstractButton](elements.nextElement())
+            def hasNext: Boolean       = elements.hasMoreElements
+    buttons ++= initialButtons
 
-  //1.6: def deselectAll() { peer.clearSelection }
-  def selected: Option[AbstractButton] = buttons.find(_.selected)
-  def select(b: AbstractButton): Unit = peer.setSelected(b.peer.getModel, true)
-}
+    // 1.6: def deselectAll() { peer.clearSelection }
+    def selected: Option[AbstractButton] = buttons.find(_.selected)
+    def select(b: AbstractButton): Unit  = peer.setSelected(b.peer.getModel, true)
+end ButtonGroup

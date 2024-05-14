@@ -18,51 +18,47 @@ import scala.collection.mutable
 /**
   * Default partial implementation for mutable set adapters.
   */
-abstract class SetWrapper[A] extends mutable.Set[A] {
-  // abstract
+abstract class SetWrapper[A] extends mutable.Set[A]:
+    // abstract
 
-  def addOne      (elem: A): this.type
-  def subtractOne (elem: A): this.type
+    def addOne(elem: A): this.type
+    def subtractOne(elem: A): this.type
 
-  // impl
+    // impl
 
-  final def +=(elem: A): this.type = addOne     (elem)
-  final def -=(elem: A): this.type = subtractOne(elem)
+    final def +=(elem: A): this.type = addOne(elem)
+    final def -=(elem: A): this.type = subtractOne(elem)
 
-  /** The collection passed to `addAll` and `subtractAll` */
-  type MoreElem[+B] = TraversableOnce[B]
+    /** The collection passed to `addAll` and `subtractAll` */
+    type MoreElem[+B] = TraversableOnce[B]
 
-  /** Cross-version way for creating an iterator from `MoreElem`. */
-  final protected def mkIterator[B](xs: MoreElem[B]): Iterator[B] = xs.toIterator
+    /** Cross-version way for creating an iterator from `MoreElem`. */
+    final protected def mkIterator[B](xs: MoreElem[B]): Iterator[B] = xs.toIterator
 
-  final override def ++=(xs: MoreElem[A]): this.type = addAll     (xs)
-  final override def --=(xs: MoreElem[A]): this.type = subtractAll(xs)
+    final override def ++=(xs: MoreElem[A]): this.type = addAll(xs)
+    final override def --=(xs: MoreElem[A]): this.type = subtractAll(xs)
 
-  def addAll(xs: MoreElem[A]): this.type = {
-    @tailrec def loop(xsl: scala.collection.LinearSeq[A]): Unit =
-      if (xsl.nonEmpty) {
-        addOne(xsl.head)
-        loop(xsl.tail)
-      }
+    def addAll(xs: MoreElem[A]): this.type =
+        @tailrec def loop(xsl: scala.collection.LinearSeq[A]): Unit =
+            if xsl.nonEmpty then
+                addOne(xsl.head)
+                loop(xsl.tail)
 
-    xs match {
-      case xsl: scala.collection.LinearSeq[A] => loop(xsl)
-      case _ => xs.foreach(addOne)
-    }
-    this
-  }
+        xs match
+            case xsl: scala.collection.LinearSeq[A] => loop(xsl)
+            case _                                  => xs.foreach(addOne)
+        this
+    end addAll
 
-  def subtractAll(xs: MoreElem[A]): this.type = {
-    @tailrec def loop(xsl: collection.LinearSeq[A]): Unit =
-      if (xsl.nonEmpty) {
-        subtractOne(xsl.head)
-        loop(xsl.tail)
-      }
+    def subtractAll(xs: MoreElem[A]): this.type =
+        @tailrec def loop(xsl: collection.LinearSeq[A]): Unit =
+            if xsl.nonEmpty then
+                subtractOne(xsl.head)
+                loop(xsl.tail)
 
-    xs match {
-      case xsl: scala.collection.LinearSeq[A] => loop(xsl)
-      case _ => xs.foreach(subtractOne)
-    }
-    this
-  }
-}
+        xs match
+            case xsl: scala.collection.LinearSeq[A] => loop(xsl)
+            case _                                  => xs.foreach(subtractOne)
+        this
+    end subtractAll
+end SetWrapper

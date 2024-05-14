@@ -21,16 +21,14 @@ trait SelectionEvent
 /**
  * An event that indicates a selection of a range of indices.
  */
-trait ListSelectionEvent extends SelectionEvent {
-  def range: Range
-}
+trait ListSelectionEvent extends SelectionEvent:
+    def range: Range
 
 case class SelectionChanged(override val source: Component) extends ComponentEvent with SelectionEvent
 
-object ListSelectionChanged {
-  def unapply[A](e: ListSelectionChanged[A]): Option[(ListView[A], Range, Boolean)] =
-    Some((e.source, e.range, e.live))
-}
+object ListSelectionChanged:
+    def unapply[A](e: ListSelectionChanged[A]): Option[(ListView[A], Range, Boolean)] =
+        Some((e.source, e.range, e.live))
 
 class ListSelectionChanged[A](override val source: ListView[A], val range: Range, val live: Boolean)
-  extends SelectionChanged(source) with ListEvent[A]
+    extends SelectionChanged(source) with ListEvent[A]

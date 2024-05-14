@@ -22,27 +22,27 @@ package scala.swing
  * Lazy values are okay for the same reason if they are initialized on the EDT
  * always.
  */
-abstract class SimpleSwingApplication extends SwingApplication {
+abstract class SimpleSwingApplication extends SwingApplication:
 
-  /**
+    /**
    * A GUI application's version of the main method. Called by the default
    * main method implementation provided by this class.
    * Implement to return the top-level frame of this application.
    */
-  def top: Frame
+    def top: Frame
 
-  /**
+    /**
    * Calls `top`, packs the frame, and displays it.
    */
-  override def startup(args: Array[String]): Unit = {
-    val t = top
-    if (t.size == new Dimension(0,0)) t.pack()
-    t.visible = true
-  }
+    override def startup(args: Array[String]): Unit =
+        val t = top
+        if t.size == new Dimension(0, 0) then t.pack()
+        t.visible = true
+    end startup
 
-  def resourceFromClassloader(path: String): java.net.URL =
-    this.getClass.getResource(path)
+    def resourceFromClassloader(path: String): java.net.URL =
+        this.getClass.getResource(path)
 
-  def resourceFromUserDirectory(path: String): java.io.File =
-    new java.io.File(util.Properties.userDir, path)
-}
+    def resourceFromUserDirectory(path: String): java.io.File =
+        new java.io.File(util.Properties.userDir, path)
+end SimpleSwingApplication

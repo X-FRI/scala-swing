@@ -34,7 +34,7 @@ package scala.swing.examples.tutorials.components
 import java.awt.{Dimension, Font}
 import javax.swing.ImageIcon
 
-import scala.swing._
+import scala.swing.*
 
 /**
  * Tutorial: How to Use Combo Boxes
@@ -50,76 +50,72 @@ import scala.swing._
  *   /scala/swing/examples/tutorials/images/Rabbit.gif
  *   /scala/swing/examples/tutorials/images/Pig.gif
  */
-class CustomComboBoxDemo extends BorderPanel {
-  val petStrings: Array[String] = Array("Bird", "Cat", "Dog", "Rabbit", "Pig")
-  //  val images: Array[Option[ImageIcon]] = new Array[Option[ImageIcon]](petStrings.length)
-  val intArray: Array[Int] = (0 until petStrings.length ).toArray
-  /*
-   * Despite its use of EmptyBorder, this panel makes a fine content
-   * pane because the empty border just increases the panel's size
-   * and is "painted" on top of the panel's normal background.  In
-   * other words, the JPanel fills its entire background if it's
-   * opaque (which it is by default); adding a border doesn't change
-   * that.
-   */
-
-  val images:Array[Option[ImageIcon]]  = petStrings.map( pet => {
-    val oImage = CustomComboBoxDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/$pet.gif")
-    oImage.map( img =>  {img.setDescription(pet); img} )
-  })
-
-  //Create the combo box.
-  val petList = new ComboBox[Int](intArray) {
-    renderer = new ComboBoxRenderer()
-    preferredSize = new Dimension(200, 130)
-    maximumRowCount = 3
-  }
-
-  //Lay out the demo.
-  layout(petList) = BorderPanel.Position.Center
-  border = Swing.EmptyBorder(20, 20, 20, 20)
-
-  class ComboBoxRenderer extends ListView.AbstractRenderer[Int, Label](new Label("")) {
-    var uhOhFont: Option[Font] = None
+class CustomComboBoxDemo extends BorderPanel:
+    val petStrings: Array[String] = Array("Bird", "Cat", "Dog", "Rabbit", "Pig")
+    //  val images: Array[Option[ImageIcon]] = new Array[Option[ImageIcon]](petStrings.length)
+    val intArray: Array[Int] = (0 until petStrings.length).toArray
     /*
-     * This method finds the image and text corresponding
-     * to the selected value and returns the label, set up
-     * to display the text and image.
+     * Despite its use of EmptyBorder, this panel makes a fine content
+     * pane because the empty border just increases the panel's size
+     * and is "painted" on top of the panel's normal background.  In
+     * other words, the JPanel fills its entire background if it's
+     * opaque (which it is by default); adding a border doesn't change
+     * that.
      */
-    def configure( listMe: ListView[_], isSelected: Boolean, cellHasFocus: Boolean, a: Int, index: Int): Unit = {
-      //Set the icon and text.  If icon was null, say so.
-      images(a) match {
-        case Some( icon ) =>
-          component.icon = icon
-          component.text = petStrings(a)
-          component.font = listMe.font
-        case None =>  setUhOhText( s"${petStrings(a)} (no image available)",  listMe.font)
-      }
-    }
 
-    //Set the font and text when no image was found.
-    def setUhOhText(uhOhText: String, normalFont: Font): Unit = {
-      if (!uhOhFont.isDefined) { //lazily create this font
-        uhOhFont = Some(normalFont.deriveFont(Font.ITALIC))
-      }
-      component.font = uhOhFont.getOrElse( normalFont )
-      component.text = uhOhText
-    }
-  }
-}
+    val images: Array[Option[ImageIcon]] = petStrings.map(pet =>
+        val oImage = CustomComboBoxDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/$pet.gif")
+        oImage.map(img =>
+            img.setDescription(pet); img
+        )
+    )
 
-object CustomComboBoxDemo extends SimpleSwingApplication {
+    // Create the combo box.
+    val petList = new ComboBox[Int](intArray):
+        renderer = new ComboBoxRenderer()
+        preferredSize = new Dimension(200, 130)
+        maximumRowCount = 3
 
-  def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+    // Lay out the demo.
+    layout(petList) = BorderPanel.Position.Center
+    border = Swing.EmptyBorder(20, 20, 20, 20)
 
-  lazy val top = new MainFrame() {
-    title = "CustomComboBoxDemo"
+    class ComboBoxRenderer extends ListView.AbstractRenderer[Int, Label](new Label("")):
+        var uhOhFont: Option[Font] = None
+        /*
+         * This method finds the image and text corresponding
+         * to the selected value and returns the label, set up
+         * to display the text and image.
+         */
+        def configure(listMe: ListView[?], isSelected: Boolean, cellHasFocus: Boolean, a: Int, index: Int): Unit =
+            // Set the icon and text.  If icon was null, say so.
+            images(a) match
+                case Some(icon) =>
+                    component.icon = icon
+                    component.text = petStrings(a)
+                    component.font = listMe.font
+                case None => setUhOhText(s"${petStrings(a)} (no image available)", listMe.font)
 
-    //Create and set up the content pane.
-    val newContentPane = new CustomComboBoxDemo()
-    newContentPane.opaque = true
-    contents = newContentPane
-  }
+        // Set the font and text when no image was found.
+        def setUhOhText(uhOhText: String, normalFont: Font): Unit =
+            if !uhOhFont.isDefined then // lazily create this font
+                uhOhFont = Some(normalFont.deriveFont(Font.ITALIC))
+            component.font = uhOhFont.getOrElse(normalFont)
+            component.text = uhOhText
+        end setUhOhText
+    end ComboBoxRenderer
+end CustomComboBoxDemo
 
-}
+object CustomComboBoxDemo extends SimpleSwingApplication:
+
+    def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+
+    lazy val top = new MainFrame():
+        title = "CustomComboBoxDemo"
+
+        // Create and set up the content pane.
+        val newContentPane = new CustomComboBoxDemo()
+        newContentPane.opaque = true
+        contents = newContentPane
+end CustomComboBoxDemo

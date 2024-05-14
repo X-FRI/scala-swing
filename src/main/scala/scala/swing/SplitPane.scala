@@ -32,57 +32,56 @@ import scala.swing.Swing.nullPeer
   * @see javax.swing.JSplitPane
   */
 class SplitPane(o: Orientation.Value, left: Component, right: Component)
-  extends Component with Container with Orientable {
+    extends Component with Container with Orientable:
 
-  def this(o: Orientation.Value) = this(o, new Component {}, new Component {})
-  def this() = this(Orientation.Horizontal)
+    def this(o: Orientation.Value) = this(o, new Component {}, new Component {})
+    def this() = this(Orientation.Horizontal)
 
-  override lazy val peer: JSplitPane =
-    new javax.swing.JSplitPane(o.id, left.peer, right.peer) with SuperMixin
+    override lazy val peer: JSplitPane =
+        new javax.swing.JSplitPane(o.id, left.peer, right.peer) with SuperMixin
 
-  def contents: immutable.Seq[Component] = List(leftComponent, rightComponent)
+    def contents: immutable.Seq[Component] = List(leftComponent, rightComponent)
 
-  def contents_=(left: Component, right: Component): Unit = {
-    peer.setLeftComponent (nullPeer(left))
-    peer.setRightComponent(nullPeer(right))
-  }
+    def contents_=(left: Component, right: Component): Unit =
+        peer.setLeftComponent(nullPeer(left))
+        peer.setRightComponent(nullPeer(right))
 
-  def topComponent: Component =
-    UIElement.cachedWrapper[Component](peer.getTopComponent.asInstanceOf[javax.swing.JComponent])
-  def topComponent_=(c: Component): Unit = peer.setTopComponent(nullPeer(c))
+    def topComponent: Component =
+        UIElement.cachedWrapper[Component](peer.getTopComponent.asInstanceOf[javax.swing.JComponent])
+    def topComponent_=(c: Component): Unit = peer.setTopComponent(nullPeer(c))
 
-  def bottomComponent: Component =
-    UIElement.cachedWrapper[Component](peer.getBottomComponent.asInstanceOf[javax.swing.JComponent])
-  def bottomComponent_=(c: Component): Unit = peer.setBottomComponent(nullPeer(c))
+    def bottomComponent: Component =
+        UIElement.cachedWrapper[Component](peer.getBottomComponent.asInstanceOf[javax.swing.JComponent])
+    def bottomComponent_=(c: Component): Unit = peer.setBottomComponent(nullPeer(c))
 
-  def leftComponent     : Component         =   topComponent
-  def leftComponent_= (c: Component): Unit  = { topComponent = c }
+    def leftComponent: Component            = topComponent
+    def leftComponent_=(c: Component): Unit = topComponent = c
 
-  def rightComponent    : Component         =   bottomComponent
-  def rightComponent_=(c: Component): Unit  = { bottomComponent = c }
+    def rightComponent: Component            = bottomComponent
+    def rightComponent_=(c: Component): Unit = bottomComponent = c
 
-  def dividerLocation       : Int             = peer.getDividerLocation
-  def dividerLocation_=   (n: Int): Unit      = peer.setDividerLocation(n)
+    def dividerLocation: Int            = peer.getDividerLocation
+    def dividerLocation_=(n: Int): Unit = peer.setDividerLocation(n)
 
-  /*def proportionalDividerLocation: Double =
+    /*def proportionalDividerLocation: Double =
     if (orientation == Orientation.Vertical) dividerLocation / (size.height - dividerSize)
     else dividerLocation / (size.width - dividerSize)*/
-  def dividerLocation_=(f: Double): Unit = peer.setDividerLocation(f)
+    def dividerLocation_=(f: Double): Unit = peer.setDividerLocation(f)
 
-  def dividerSize           : Int             = peer.getDividerSize
-  def dividerSize_=       (n: Int): Unit      = peer.setDividerSize(n)
+    def dividerSize: Int            = peer.getDividerSize
+    def dividerSize_=(n: Int): Unit = peer.setDividerSize(n)
 
-  def resizeWeight          : Double          = peer.getResizeWeight
-  def resizeWeight_=      (n: Double): Unit   = peer.setResizeWeight(n)
+    def resizeWeight: Double            = peer.getResizeWeight
+    def resizeWeight_=(n: Double): Unit = peer.setResizeWeight(n)
 
-  def resetToPreferredSizes(): Unit = peer.resetToPreferredSizes()
+    def resetToPreferredSizes(): Unit = peer.resetToPreferredSizes()
 
-  def oneTouchExpandable    : Boolean         = peer.isOneTouchExpandable
-  def oneTouchExpandable_=(b: Boolean): Unit  = peer.setOneTouchExpandable(b)
+    def oneTouchExpandable: Boolean            = peer.isOneTouchExpandable
+    def oneTouchExpandable_=(b: Boolean): Unit = peer.setOneTouchExpandable(b)
 
-  def continuousLayout      : Boolean         = peer.isContinuousLayout
-  def continuousLayout_=  (b: Boolean): Unit  = peer.setContinuousLayout(b)
+    def continuousLayout: Boolean            = peer.isContinuousLayout
+    def continuousLayout_=(b: Boolean): Unit = peer.setContinuousLayout(b)
 
-  def orientation     : Orientation.Value         = Orientation(peer.getOrientation())
-  def orientation_= (o: Orientation.Value): Unit  = peer.setOrientation(o.id)
-}
+    def orientation: Orientation.Value            = Orientation(peer.getOrientation())
+    def orientation_=(o: Orientation.Value): Unit = peer.setOrientation(o.id)
+end SplitPane

@@ -13,10 +13,10 @@
 package scala.swing
 package event
 
-trait InputEvent extends ComponentEvent {
-  def peer: java.awt.event.InputEvent
-  def when: Long = peer.getWhen
-  def modifiers: Key.Modifiers
-  def consume(): Unit = peer.consume()
-  def consumed: Boolean = peer.isConsumed
-}
+trait InputEvent extends ComponentEvent:
+    def peer: java.awt.event.InputEvent
+    def when: Long = peer.getWhen
+    def modifiers: Key.Modifiers
+    def consume(): Unit   = peer.consume()
+    def consumed: Boolean = peer.isConsumed
+end InputEvent

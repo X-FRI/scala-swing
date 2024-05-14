@@ -30,9 +30,9 @@
  */
 package scala.swing.examples.tutorials.layout
 
-import scala.swing._
-import javax.swing.{ ImageIcon }
-import java.awt.{ Color, Dimension }
+import scala.swing.*
+import javax.swing.{ImageIcon}
+import java.awt.{Color, Dimension}
 import java.net.URL
 
 /**
@@ -50,115 +50,101 @@ import java.net.URL
  * a BoxLayout for components with maximum sizes and different
  * default alignments.
  */
-class BoxAlignmentDemo extends BorderPanel {
+class BoxAlignmentDemo extends BorderPanel:
 
-  val buttonRow = new FlowPanel() {
-    contents += createButtonRow(false)
-    contents += createButtonRow(true)
-  }
-  val labelAndComponent = new FlowPanel() {
-    contents += createLabelAndComponent(false)
-    contents += createLabelAndComponent(true)
-  }
-  val buttonAndComponent = new FlowPanel() {
-    contents += createYAlignmentExample(false)
-    contents += createYAlignmentExample(true)
-  }
-  val tabbedPane = new TabbedPane()
-  tabbedPane.pages += new TabbedPane.Page("Altering alignments", buttonRow)
-  tabbedPane.pages += new TabbedPane.Page("X alignment mismatch", labelAndComponent)
-  tabbedPane.pages += new TabbedPane.Page("Y alignment mismatch", buttonAndComponent)
-  //Add tabbedPane to this panel
-  layout(tabbedPane) = BorderPanel.Position.Center
+    val buttonRow = new FlowPanel():
+        contents += createButtonRow(false)
+        contents += createButtonRow(true)
+    val labelAndComponent = new FlowPanel():
+        contents += createLabelAndComponent(false)
+        contents += createLabelAndComponent(true)
+    val buttonAndComponent = new FlowPanel():
+        contents += createYAlignmentExample(false)
+        contents += createYAlignmentExample(true)
+    val tabbedPane = new TabbedPane()
+    tabbedPane.pages += new TabbedPane.Page("Altering alignments", buttonRow)
+    tabbedPane.pages += new TabbedPane.Page("X alignment mismatch", labelAndComponent)
+    tabbedPane.pages += new TabbedPane.Page("Y alignment mismatch", buttonAndComponent)
+    // Add tabbedPane to this panel
+    layout(tabbedPane) = BorderPanel.Position.Center
 
-  def createButtonRow(changeAlignment: Boolean): BoxPanel = {
-    val button1 = new Button("A Button") {
-      icon = BoxAlignmentDemo.createImageIcon("/scala/swing/examples/tutorials/images/middle.gif").get
-      verticalTextPosition = Alignment.Bottom
-      horizontalTextPosition = Alignment.Center
-    }
-    val button2 = new Button("Another Button") {
-      icon = BoxAlignmentDemo.createImageIcon("/scala/swing/examples/tutorials/images/geek-cght.gif").get
-      verticalTextPosition = Alignment.Bottom
-      horizontalTextPosition = Alignment.Center
-    }
-    val title = if (changeAlignment) "Desired" else "Default"
-    if (changeAlignment) {
-      button1.yLayoutAlignment = 1.0f // Bottom
-      button2.yLayoutAlignment = 1.0f // Bottom
-    }
-    val panel = new BoxPanel(Orientation.Horizontal) {
-      border = Swing.TitledBorder(Swing.EmptyBorder, title)
-      contents += button1
-      contents += button2
-    }
-    panel
-  }
+    def createButtonRow(changeAlignment: Boolean): BoxPanel =
+        val button1 = new Button("A Button"):
+            icon = BoxAlignmentDemo.createImageIcon("/scala/swing/examples/tutorials/images/middle.gif").get
+            verticalTextPosition = Alignment.Bottom
+            horizontalTextPosition = Alignment.Center
+        val button2 = new Button("Another Button"):
+            icon = BoxAlignmentDemo.createImageIcon("/scala/swing/examples/tutorials/images/geek-cght.gif").get
+            verticalTextPosition = Alignment.Bottom
+            horizontalTextPosition = Alignment.Center
+        val title = if changeAlignment then "Desired" else "Default"
+        if changeAlignment then
+            button1.yLayoutAlignment = 1.0f // Bottom
+            button2.yLayoutAlignment = 1.0f // Bottom
+        val panel = new BoxPanel(Orientation.Horizontal):
+            border = Swing.TitledBorder(Swing.EmptyBorder, title)
+            contents += button1
+            contents += button2
+        panel
+    end createButtonRow
 
-  def createLabelAndComponent(doItRight: Boolean): BoxPanel = {
-    val dSize = new Dimension(150, 100)
-    val component = new FlowPanel() {
-      maximumSize = dSize
-      preferredSize = dSize
-      minimumSize = dSize
-      border = Swing.TitledBorder(Swing.LineBorder(Color.black), "A Panel")
-    }
-    val title = if (doItRight) "Matched" else "Mismatched"
-    val paneBorder = Swing.TitledBorder(Swing.EmptyBorder, title)
-    paneBorder.setTitleJustification(javax.swing.border.TitledBorder.CENTER)
-    paneBorder.setTitlePosition(javax.swing.border.TitledBorder.BELOW_TOP)
-    paneBorder.setTitleColor(Color.black)
-    val label = new Label("This is a Label")
-    if (doItRight) label.xLayoutAlignment = 0.5f // Center
-    val pane = new BoxPanel(Orientation.Vertical) {
-      border = paneBorder
-      contents += label
-      contents += component
-    }
-    pane
-  }
+    def createLabelAndComponent(doItRight: Boolean): BoxPanel =
+        val dSize = new Dimension(150, 100)
+        val component = new FlowPanel():
+            maximumSize = dSize
+            preferredSize = dSize
+            minimumSize = dSize
+            border = Swing.TitledBorder(Swing.LineBorder(Color.black), "A Panel")
+        val title      = if doItRight then "Matched" else "Mismatched"
+        val paneBorder = Swing.TitledBorder(Swing.EmptyBorder, title)
+        paneBorder.setTitleJustification(javax.swing.border.TitledBorder.CENTER)
+        paneBorder.setTitlePosition(javax.swing.border.TitledBorder.BELOW_TOP)
+        paneBorder.setTitleColor(Color.black)
+        val label = new Label("This is a Label")
+        if doItRight then label.xLayoutAlignment = 0.5f // Center
+        val pane = new BoxPanel(Orientation.Vertical):
+            border = paneBorder
+            contents += label
+            contents += component
+        pane
+    end createLabelAndComponent
 
-  def createYAlignmentExample(doItRight: Boolean): BoxPanel = {
-    val dSize1 = new Dimension(150, 100)
-    val title = if (doItRight) "Matched" else "Mismatched"
-    val componentBorder = Swing.TitledBorder(Swing.LineBorder(Color.black), "A Panel")
-    componentBorder.setTitleJustification(javax.swing.border.TitledBorder.CENTER)
-    componentBorder.setTitlePosition(javax.swing.border.TitledBorder.BELOW_TOP)
-    componentBorder.setTitleColor(Color.black)
-    val component1 = new FlowPanel() {
-      maximumSize = dSize1
-      preferredSize = dSize1
-      minimumSize = dSize1
-      border = componentBorder
-    }
-    if (!doItRight) component1.yLayoutAlignment = 0.0f // TOP_ALIGNMENT
+    def createYAlignmentExample(doItRight: Boolean): BoxPanel =
+        val dSize1          = new Dimension(150, 100)
+        val title           = if doItRight then "Matched" else "Mismatched"
+        val componentBorder = Swing.TitledBorder(Swing.LineBorder(Color.black), "A Panel")
+        componentBorder.setTitleJustification(javax.swing.border.TitledBorder.CENTER)
+        componentBorder.setTitlePosition(javax.swing.border.TitledBorder.BELOW_TOP)
+        componentBorder.setTitleColor(Color.black)
+        val component1 = new FlowPanel():
+            maximumSize = dSize1
+            preferredSize = dSize1
+            minimumSize = dSize1
+            border = componentBorder
+        if !doItRight then component1.yLayoutAlignment = 0.0f // TOP_ALIGNMENT
 
-    val dSize2 = new Dimension(100, 50)
-    val component2 = new FlowPanel() {
-      maximumSize = dSize2
-      preferredSize = dSize2
-      minimumSize = dSize2
-      border = componentBorder
-    }
-    val paneBorder = Swing.TitledBorder(Swing.EmptyBorder, title)
-    val pane = new BoxPanel(Orientation.Horizontal) {
-      border = paneBorder
-      contents += component1
-      contents += component2
-    }
-    pane
-  }
-}
+        val dSize2 = new Dimension(100, 50)
+        val component2 = new FlowPanel():
+            maximumSize = dSize2
+            preferredSize = dSize2
+            minimumSize = dSize2
+            border = componentBorder
+        val paneBorder = Swing.TitledBorder(Swing.EmptyBorder, title)
+        val pane = new BoxPanel(Orientation.Horizontal):
+            border = paneBorder
+            contents += component1
+            contents += component2
+        pane
+    end createYAlignmentExample
+end BoxAlignmentDemo
 
-object BoxAlignmentDemo extends SimpleSwingApplication {
-  /** Returns an ImageIcon option, or None if the path was invalid. */
-  def createImageIcon(path: String): Option[javax.swing.ImageIcon] = {
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
-  }
+object BoxAlignmentDemo extends SimpleSwingApplication:
+    /** Returns an ImageIcon option, or None if the path was invalid. */
+    def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
 
-  //Create and set up the window.
-  lazy val top = new MainFrame {
-    title = "BoxAlignmentDemo"
-    contents = new BoxAlignmentDemo()
-  }
-}
+    // Create and set up the window.
+    lazy val top = new MainFrame:
+        title = "BoxAlignmentDemo"
+        contents = new BoxAlignmentDemo()
+end BoxAlignmentDemo

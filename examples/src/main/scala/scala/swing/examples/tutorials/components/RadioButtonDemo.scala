@@ -32,8 +32,8 @@
 package scala.swing.examples.tutorials.components
 
 import java.awt.Dimension
-import scala.swing._
-import scala.swing.event.{ ButtonClicked, Key }
+import scala.swing.*
+import scala.swing.event.{ButtonClicked, Key}
 import javax.swing.ImageIcon
 
 /**
@@ -50,81 +50,71 @@ import javax.swing.ImageIcon
  *   /scala/swing/examples/tutorials/images/Rabbit.gif
  *   /scala/swing/examples/tutorials/images/Pig.gif
  */
-class RadioButtonDemo extends BorderPanel {
-  val birdString = "Bird"
-  val catString = "Cat"
-  val dogString = "Dog"
-  val rabbitString = "Rabbit"
-  val pigString = "Pig"
+class RadioButtonDemo extends BorderPanel:
+    val birdString   = "Bird"
+    val catString    = "Cat"
+    val dogString    = "Dog"
+    val rabbitString = "Rabbit"
+    val pigString    = "Pig"
 
-  //Create the radio buttons.
-  val birdButton = new RadioButton(birdString) {
-    mnemonic = Key.B
-    selected = true
-  }
-  val catButton = new RadioButton(catString) {
-    mnemonic = Key.C
-    selected = false
-  }
-  val dogButton = new RadioButton(dogString) {
-    mnemonic = Key.D
-    selected = false
-  }
-  val rabbitButton = new RadioButton(rabbitString) {
-    mnemonic = Key.R
-    selected = false
-  }
-  val pigButton = new RadioButton(pigString) {
-    mnemonic = Key.P
-    selected = false
-  }
+    // Create the radio buttons.
+    val birdButton = new RadioButton(birdString):
+        mnemonic = Key.B
+        selected = true
+    val catButton = new RadioButton(catString):
+        mnemonic = Key.C
+        selected = false
+    val dogButton = new RadioButton(dogString):
+        mnemonic = Key.D
+        selected = false
+    val rabbitButton = new RadioButton(rabbitString):
+        mnemonic = Key.R
+        selected = false
+    val pigButton = new RadioButton(pigString):
+        mnemonic = Key.P
+        selected = false
 
-  //Group the radio buttons.
-  val group = new ButtonGroup() {
-    buttons ++= Seq(birdButton, catButton, dogButton, rabbitButton, pigButton)
-  }
+    // Group the radio buttons.
+    val group = new ButtonGroup():
+        buttons ++= Seq(birdButton, catButton, dogButton, rabbitButton, pigButton)
 
-  //Set up the picture label.
-  val imgIcon = RadioButtonDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/$birdString.gif")
-  val picture = new Label() {
-    icon = imgIcon.get
-    //The preferred size is hard-coded to be the width of the
-    //widest image and the height of the tallest image.
-    //A real program would compute this.
-    preferredSize = new Dimension(177, 122)
-  }
+    // Set up the picture label.
+    val imgIcon = RadioButtonDemo.createImageIcon(s"/scala/swing/examples/tutorials/images/$birdString.gif")
+    val picture = new Label():
+        icon = imgIcon.get
+        // The preferred size is hard-coded to be the width of the
+        // widest image and the height of the tallest image.
+        // A real program would compute this.
+        preferredSize = new Dimension(177, 122)
 
-  //Put the radio buttons in a column in a panel.
-  val radioPanel = new GridPanel(0, 1) {
-    contents ++= Seq(birdButton, catButton, dogButton, rabbitButton, pigButton)
-  }
+    // Put the radio buttons in a column in a panel.
+    val radioPanel = new GridPanel(0, 1):
+        contents ++= Seq(birdButton, catButton, dogButton, rabbitButton, pigButton)
 
-  layout(radioPanel) = BorderPanel.Position.East
-  layout(picture) = BorderPanel.Position.Center
-  border = Swing.EmptyBorder(20, 20, 20, 20)
+    layout(radioPanel) = BorderPanel.Position.East
+    layout(picture) = BorderPanel.Position.Center
+    border = Swing.EmptyBorder(20, 20, 20, 20)
 
-  listenTo(birdButton)
-  listenTo(catButton)
-  listenTo(dogButton)
-  listenTo(rabbitButton)
-  listenTo(pigButton)
+    listenTo(birdButton)
+    listenTo(catButton)
+    listenTo(dogButton)
+    listenTo(rabbitButton)
+    listenTo(pigButton)
 
-  reactions += {
-    case ButtonClicked(button) => picture.icon = getPictureIcon(button.text)
-  }
+    reactions += {
+        case ButtonClicked(button) => picture.icon = getPictureIcon(button.text)
+    }
 
-  def getPictureIcon(gifName: String): ImageIcon = {
-    RadioButtonDemo.createImageIcon("/scala/swing/examples/tutorials/images/" + gifName + ".gif").get
-  }
-}
+    def getPictureIcon(gifName: String): ImageIcon =
+        RadioButtonDemo.createImageIcon("/scala/swing/examples/tutorials/images/" + gifName + ".gif").get
+end RadioButtonDemo
 
-object RadioButtonDemo extends SimpleSwingApplication {
+object RadioButtonDemo extends SimpleSwingApplication:
 
-  def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+    def createImageIcon(path: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
 
-  lazy val top = new MainFrame() {
-    title = "RadioButtonDemo"
-    contents = new RadioButtonDemo()
-  }
-}
+    lazy val top = new MainFrame():
+        title = "RadioButtonDemo"
+        contents = new RadioButtonDemo()
+end RadioButtonDemo

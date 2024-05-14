@@ -12,46 +12,46 @@
 
 package scala.swing
 
-import java.awt.{Adjustable => JAdjustable}
+import java.awt.{Adjustable as JAdjustable}
 
-object Adjustable {
-  trait Wrapper extends Oriented with Adjustable {
-    def peer: JAdjustable
+object Adjustable:
+    trait Wrapper extends Oriented with Adjustable:
+        def peer: JAdjustable
 
-    def unitIncrement: Int = peer.getUnitIncrement
-    def unitIncrement_=(i: Int): Unit = peer.setUnitIncrement(i)
-    def blockIncrement: Int = peer.getBlockIncrement
-    def blockIncrement_=(i: Int): Unit = peer.setBlockIncrement(i)
+        def unitIncrement: Int             = peer.getUnitIncrement
+        def unitIncrement_=(i: Int): Unit  = peer.setUnitIncrement(i)
+        def blockIncrement: Int            = peer.getBlockIncrement
+        def blockIncrement_=(i: Int): Unit = peer.setBlockIncrement(i)
 
-    def value: Int = peer.getValue
-    def value_=(v: Int): Unit = peer.setValue(v)
+        def value: Int            = peer.getValue
+        def value_=(v: Int): Unit = peer.setValue(v)
 
-    def visibleAmount: Int = peer.getVisibleAmount
-    def visibleAmount_=(v: Int): Unit = peer.setVisibleAmount(v)
+        def visibleAmount: Int            = peer.getVisibleAmount
+        def visibleAmount_=(v: Int): Unit = peer.setVisibleAmount(v)
 
-    def minimum: Int = peer.getMinimum
-    def minimum_=(m: Int): Unit = peer.setMinimum(m)
-    def maximum: Int = peer.getMaximum
-    def maximum_=(m: Int): Unit = peer.setMaximum(m)
-  }
-}
+        def minimum: Int            = peer.getMinimum
+        def minimum_=(m: Int): Unit = peer.setMinimum(m)
+        def maximum: Int            = peer.getMaximum
+        def maximum_=(m: Int): Unit = peer.setMaximum(m)
+    end Wrapper
+end Adjustable
 
-trait Adjustable extends Oriented {
-  def unitIncrement: Int
-  def unitIncrement_=(i: Int): Unit
-  def blockIncrement: Int
-  def blockIncrement_=(i: Int): Unit
+trait Adjustable extends Oriented:
+    def unitIncrement: Int
+    def unitIncrement_=(i: Int): Unit
+    def blockIncrement: Int
+    def blockIncrement_=(i: Int): Unit
 
-  def value: Int
-  def value_=(v : Int): Unit
+    def value: Int
+    def value_=(v: Int): Unit
 
-  def visibleAmount: Int
-  def visibleAmount_=(v: Int): Unit
+    def visibleAmount: Int
+    def visibleAmount_=(v: Int): Unit
 
-  def minimum: Int
-  def minimum_=(m: Int): Unit
-  def maximum: Int
-  def maximum_=(m: Int): Unit
+    def minimum: Int
+    def minimum_=(m: Int): Unit
+    def maximum: Int
+    def maximum_=(m: Int): Unit
 
 // Needs implementation of AdjustmentEvent
 //
@@ -62,4 +62,4 @@ trait Adjustable extends Oriented {
 //			}
 //		})
 //   	}
-}
+end Adjustable

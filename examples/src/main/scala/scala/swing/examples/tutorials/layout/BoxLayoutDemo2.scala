@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.layout
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.ButtonClicked
 import java.awt.Color
 
@@ -44,65 +44,60 @@ import java.awt.Color
  *
  * BoxLayoutDemo2.scala requires BLDComponent.scala.
  */
-class BoxLayoutDemo2 extends BorderPanel {
-  private val NumComponents = 3
-  // Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT, Component.RIGHT_ALIGNMENT
-  private val xAlignment = Array(0.0f, 0.5f, 1.0f)
-  private val hue = Array(0.0f, 0.33f, 0.67f)
-  private var restrictSize = true
-  private val sizeIsRandom = false
-  private val bldComponent = new Array[BLDComponent](NumComponents)
-  val panel = new BoxPanel(Orientation.Vertical)
-  //Create the rectangles.
-  var shortSideSize = 15
-  for (i <- 0 until NumComponents) {
-    if (sizeIsRandom) {
-      shortSideSize = (30.0 * Math.random()).toInt + 30
-    }
-    else {
-      shortSideSize += 10
-    }
-    bldComponent(i) = new BLDComponent(xAlignment(i), hue(i),
-        shortSideSize, restrictSize, sizeIsRandom, i.toString)
-    panel.contents += bldComponent(i).asInstanceOf[Component]
-  }
-  
-  //Create the instructions.
-  val label = new Label("Click a rectangle to change its X alignment.")
-  val cb = new CheckBox("Restrict maximum rectangle size.") {
-    selected = restrictSize
-  }
-  
-  border = Swing.LineBorder(Color.red)
-  
-  // Use a BoxPanel instead of javax.swing.Box
-  val box = new BoxPanel(Orientation.Vertical) {
-    contents += label
-    contents += cb
-  }
-  
-  layout(panel) = BorderPanel.Position.Center
-  layout(box) = BorderPanel.Position.South
-  
-  listenTo(cb)
-  
-  reactions += {
-    case ButtonClicked(`cb`) => 
-      restrictSize = cb.selected
-      notifyBldComponents()
-  }
-  
-  def notifyBldComponents(): Unit = {
-    for (i <- 0 until NumComponents) {
-      bldComponent(i).setSizeRestriction(restrictSize)
-    }
-    bldComponent(0).revalidate()
-  }
-}
+class BoxLayoutDemo2 extends BorderPanel:
+    private val NumComponents = 3
+    // Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT, Component.RIGHT_ALIGNMENT
+    private val xAlignment   = Array(0.0f, 0.5f, 1.0f)
+    private val hue          = Array(0.0f, 0.33f, 0.67f)
+    private var restrictSize = true
+    private val sizeIsRandom = false
+    private val bldComponent = new Array[BLDComponent](NumComponents)
+    val panel                = new BoxPanel(Orientation.Vertical)
+    // Create the rectangles.
+    var shortSideSize = 15
+    for i <- 0 until NumComponents do
+        if sizeIsRandom then
+            shortSideSize = (30.0 * Math.random()).toInt + 30
+        else
+            shortSideSize += 10
+        end if
+        bldComponent(i) = new BLDComponent(xAlignment(i), hue(i),
+            shortSideSize, restrictSize, sizeIsRandom, i.toString)
+        panel.contents += bldComponent(i).asInstanceOf[Component]
+    end for
 
-object BoxLayoutDemo2 extends SimpleSwingApplication {
-  lazy val top = new MainFrame() {
-    title = "BoxLayoutDemo2"
-    contents = new BoxLayoutDemo2()
-  }
-}
+    // Create the instructions.
+    val label = new Label("Click a rectangle to change its X alignment.")
+    val cb = new CheckBox("Restrict maximum rectangle size."):
+        selected = restrictSize
+
+    border = Swing.LineBorder(Color.red)
+
+    // Use a BoxPanel instead of javax.swing.Box
+    val box = new BoxPanel(Orientation.Vertical):
+        contents += label
+        contents += cb
+
+    layout(panel) = BorderPanel.Position.Center
+    layout(box) = BorderPanel.Position.South
+
+    listenTo(cb)
+
+    reactions += {
+        case ButtonClicked(`cb`) =>
+            restrictSize = cb.selected
+            notifyBldComponents()
+    }
+
+    def notifyBldComponents(): Unit =
+        for i <- 0 until NumComponents do
+            bldComponent(i).setSizeRestriction(restrictSize)
+        bldComponent(0).revalidate()
+    end notifyBldComponents
+end BoxLayoutDemo2
+
+object BoxLayoutDemo2 extends SimpleSwingApplication:
+    lazy val top = new MainFrame():
+        title = "BoxLayoutDemo2"
+        contents = new BoxLayoutDemo2()
+end BoxLayoutDemo2

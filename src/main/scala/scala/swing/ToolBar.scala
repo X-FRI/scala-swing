@@ -15,6 +15,5 @@ package scala.swing
 /**
  * Like a menu, a way to map text or icons to actions;  but detachable from the rest of the user interface.
  */
-class ToolBar extends scala.swing.Component with SequentialContainer.Wrapper {
-  override lazy val peer: javax.swing.JToolBar = new javax.swing.JToolBar with SuperMixin
-}
+class ToolBar extends scala.swing.Component with SequentialContainer.Wrapper:
+    override lazy val peer: javax.swing.JToolBar = new javax.swing.JToolBar with SuperMixin

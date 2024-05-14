@@ -20,7 +20,6 @@ package event
  *  with `adjusting == '''true'''` until the user finally releases the
  *  mouse button.
  */
-trait AdjustingEvent extends ComponentEvent {
-  def adjusting: Boolean
-  def committed: Boolean = !adjusting
-}
+trait AdjustingEvent extends ComponentEvent:
+    def adjusting: Boolean
+    def committed: Boolean = !adjusting

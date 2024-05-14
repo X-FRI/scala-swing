@@ -45,33 +45,32 @@ import javax.swing.Icon
  *
  * @author Collin Fagan
  */
-class MissingIcon extends Icon {
+class MissingIcon extends Icon:
 
-  private val width = 32
-  private val height = 32
+    private val width  = 32
+    private val height = 32
 
-  private val stroke = new BasicStroke(4)
+    private val stroke = new BasicStroke(4)
 
-  def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
-    val g2d: Graphics2D = g.create().asInstanceOf[Graphics2D]
+    def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit =
+        val g2d: Graphics2D = g.create().asInstanceOf[Graphics2D]
 
-    g2d.setColor(Color.WHITE)
-    g2d.fillRect(x + 1, y + 1, width - 2, height - 2)
+        g2d.setColor(Color.WHITE)
+        g2d.fillRect(x + 1, y + 1, width - 2, height - 2)
 
-    g2d.setColor(Color.BLACK)
-    g2d.drawRect(x + 1, y + 1, width - 2, height - 2)
+        g2d.setColor(Color.BLACK)
+        g2d.drawRect(x + 1, y + 1, width - 2, height - 2)
 
-    g2d.setColor(Color.RED)
+        g2d.setColor(Color.RED)
 
-    g2d.setStroke(stroke)
-    g2d.drawLine(x + 10, y + 10, x + width - 10, y + height - 10)
-    g2d.drawLine(x + 10, y + height - 10, x + width - 10, y + 10)
+        g2d.setStroke(stroke)
+        g2d.drawLine(x + 10, y + 10, x + width - 10, y + height - 10)
+        g2d.drawLine(x + 10, y + height - 10, x + width - 10, y + 10)
 
-    g2d.dispose()
-  }
+        g2d.dispose()
+    end paintIcon
 
-  override def getIconWidth: Int = width
+    override def getIconWidth: Int = width
 
-  override def getIconHeight: Int = height
-
-}
+    override def getIconHeight: Int = height
+end MissingIcon

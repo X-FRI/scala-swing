@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 import javax.swing.ImageIcon
 import javax.swing.UIManager
 
@@ -44,40 +44,38 @@ import javax.swing.UIManager
  * LabelDemo.scala needs one other file:
  *   /scala/swing/examples/tutorials/images/middle.gif
  */
-class LabelDemo extends GridPanel(3, 1) {
-  val icon: Option[ImageIcon] = LabelDemo.createImageIcon("/scala/swing/examples/tutorials/images/middle.gif",
+class LabelDemo extends GridPanel(3, 1):
+    val icon: Option[ImageIcon] = LabelDemo.createImageIcon("/scala/swing/examples/tutorials/images/middle.gif",
         "a pretty but meaningless splat")
-  //Create the first label.
-  val label1: Label = new Label("Image and Text", icon.get, Alignment.Center) {
-    //Set the position of its text, relative to its icon:
-    verticalTextPosition = Alignment.Bottom
-    horizontalTextPosition = Alignment.Center
-  }
-  
-  //Create the other labels.
-  val label2 = new Label("Text-Only Label")
-  val label3 = new Label("", icon.get, Alignment.Center)
-  
-  //Create tool tips, for the heck of it.
-  label1.tooltip = "A label containing both image and text"
-  label2.tooltip = "A label containing only text"
-  label3.tooltip = "A label containing only an image"
-    
-  contents += label1
-  contents += label2
-  contents += label3
-}
+    // Create the first label.
+    val label1: Label = new Label("Image and Text", icon.get, Alignment.Center):
+        // Set the position of its text, relative to its icon:
+        verticalTextPosition = Alignment.Bottom
+        horizontalTextPosition = Alignment.Center
 
-object LabelDemo extends SimpleSwingApplication {
-  //TD UIManager.put("swing.boldMetal", false)
-  /** Returns an ImageIcon option, or None if the path was invalid. */
-  def createImageIcon(path: String, desc:String ): Option[javax.swing.ImageIcon] =
-    Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+    // Create the other labels.
+    val label2 = new Label("Text-Only Label")
+    val label3 = new Label("", icon.get, Alignment.Center)
 
-  lazy val top = new MainFrame() {
-    title = "LabelDemo"
-    //Create and set up the content pane.
-    //TD javax.swing.UIManager.put("swing.boldMetal", false)
-    contents = new LabelDemo()
-  }
-}
+    // Create tool tips, for the heck of it.
+    label1.tooltip = "A label containing both image and text"
+    label2.tooltip = "A label containing only text"
+    label3.tooltip = "A label containing only an image"
+
+    contents += label1
+    contents += label2
+    contents += label3
+end LabelDemo
+
+object LabelDemo extends SimpleSwingApplication:
+    // TD UIManager.put("swing.boldMetal", false)
+    /** Returns an ImageIcon option, or None if the path was invalid. */
+    def createImageIcon(path: String, desc: String): Option[javax.swing.ImageIcon] =
+        Option(resourceFromClassloader(path)).map(imgURL => Swing.Icon(imgURL))
+
+    lazy val top = new MainFrame():
+        title = "LabelDemo"
+        // Create and set up the content pane.
+        // TD javax.swing.UIManager.put("swing.boldMetal", false)
+        contents = new LabelDemo()
+end LabelDemo

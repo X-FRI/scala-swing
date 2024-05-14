@@ -12,14 +12,13 @@
 
 package scala.swing.examples
 
-import scala.swing._
+import scala.swing.*
 
 /**
  * A simple swing demo.
  */
-object HelloWorld extends SimpleSwingApplication {
-  def top: Frame = new MainFrame {
-    title = "Hello, World!"
-    contents = new Button("Click Me!")
-  }
-}
+object HelloWorld extends SimpleSwingApplication:
+    def top: Frame = new MainFrame:
+        title = "Hello, World!"
+        contents = new Button("Click Me!")
+end HelloWorld

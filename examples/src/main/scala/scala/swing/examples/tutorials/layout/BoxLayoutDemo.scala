@@ -30,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.layout
 
-import scala.swing._
+import scala.swing.*
 
 /**
  * Tutorials: How to Use BoxLayout
@@ -41,33 +41,27 @@ import scala.swing._
  *
  * BoxLayoutDemo.scala requires no other files.
  */
-class BoxLayoutDemo extends BoxPanel(Orientation.Vertical) {
-  val button1 = new Button("Button 1") {
-    xLayoutAlignment = 0.5
-  }
-  val button2 = new Button("Button 2") {
-    xLayoutAlignment = 0.5
-  }
-  val button3 = new Button("Button 3") {
-    xLayoutAlignment = 0.5
-  }
-  val button4 = new Button("Long-Named Button 4") {
-    xLayoutAlignment = 0.5
-  }
-  val button5 = new Button("5") {
-    xLayoutAlignment = 0.5
-  }
-  contents += button1
-  contents += button2
-  contents += button3
-  contents += button4
-  contents += button5
-}
+class BoxLayoutDemo extends BoxPanel(Orientation.Vertical):
+    val button1 = new Button("Button 1"):
+        xLayoutAlignment = 0.5
+    val button2 = new Button("Button 2"):
+        xLayoutAlignment = 0.5
+    val button3 = new Button("Button 3"):
+        xLayoutAlignment = 0.5
+    val button4 = new Button("Long-Named Button 4"):
+        xLayoutAlignment = 0.5
+    val button5 = new Button("5"):
+        xLayoutAlignment = 0.5
+    contents += button1
+    contents += button2
+    contents += button3
+    contents += button4
+    contents += button5
+end BoxLayoutDemo
 
-object BoxLayoutDemo extends SimpleSwingApplication {
-  //Create and set up the window.
-  lazy val top = new MainFrame {
-    title = "BoxLayoutDemo"
-    contents = new BoxLayoutDemo()
-  }
-}
+object BoxLayoutDemo extends SimpleSwingApplication:
+    // Create and set up the window.
+    lazy val top = new MainFrame:
+        title = "BoxLayoutDemo"
+        contents = new BoxLayoutDemo()
+end BoxLayoutDemo

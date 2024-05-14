@@ -32,3 +32,6 @@ scala-swing.iml
 target/
 /.bloop/
 /.bsp/
+
+/.metals/
+/.vscode/

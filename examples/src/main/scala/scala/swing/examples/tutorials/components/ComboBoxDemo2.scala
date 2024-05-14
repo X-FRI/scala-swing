@@ -31,12 +31,11 @@
 
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 import scala.swing.event.SelectionChanged
 import java.awt.Color
 import java.util.Date
 import java.text.SimpleDateFormat
-
 
 import scala.util.{Try, Failure, Success}
 
@@ -47,83 +46,74 @@ import scala.util.{Try, Failure, Success}
  * Source code reference:
  * [[http://docs.oracle.com/javase/tutorial/uiswing/examples/components/ComboBoxDemo2Project/src/components/ComboBoxDemo2.java]]
  */
-class ComboBoxDemo2 extends BoxPanel(Orientation.Vertical) {
-  val patternExamples = Array[String](
-    "dd MMMMM yyyy",
-    "dd.MM.yy",
-    "MM/dd/yy",
-    "yyyy.MM.dd G 'at' hh:mm:ss z",
-    "EEE, MMM d, ''yy",
-    "h:mm a",
-    "H:mm:ss:SSS",
-    "K:mm a,z",
-    "yyyy.MMMMM.dd GGG hh:mm aaa")
+class ComboBoxDemo2 extends BoxPanel(Orientation.Vertical):
+    val patternExamples = Array[String](
+        "dd MMMMM yyyy",
+        "dd.MM.yy",
+        "MM/dd/yy",
+        "yyyy.MM.dd G 'at' hh:mm:ss z",
+        "EEE, MMM d, ''yy",
+        "h:mm a",
+        "H:mm:ss:SSS",
+        "K:mm a,z",
+        "yyyy.MMMMM.dd GGG hh:mm aaa")
 
+    // Set up the UI for selecting a pattern.
+    val patternLabel1 = new Label("Enter the pattern string or")
+    val patternLabel2 = new Label("select one from the list:")
+    val patternList = new ComboBox[String](patternExamples):
+        makeEditable()
+        selection.item = patternExamples(0)
 
-  //Set up the UI for selecting a pattern.
-  val patternLabel1 = new Label("Enter the pattern string or")
-  val patternLabel2 = new Label("select one from the list:")
-  val patternList = new ComboBox[String](patternExamples) {
-    makeEditable()
-    selection.item = patternExamples(0)
-  }
-  
-  //Create the UI for displaying result.
-  val resultLabel = new Label("Current Date/Time", Swing.EmptyIcon, Alignment.Left ) {
-    foreground = Color.black
-    border = Swing.EmptyBorder(5, 5, 5, 5)
-  }
-  
-  val result = new Label(" ") {
-    foreground = Color.black
-    border = Swing.CompoundBorder(
-             Swing.LineBorder(Color.black),
-             Swing.EmptyBorder(5,5,5,5)
+    // Create the UI for displaying result.
+    val resultLabel = new Label("Current Date/Time", Swing.EmptyIcon, Alignment.Left):
+        foreground = Color.black
+        border = Swing.EmptyBorder(5, 5, 5, 5)
+
+    val result = new Label(" "):
+        foreground = Color.black
+        border = Swing.CompoundBorder(
+            Swing.LineBorder(Color.black),
+            Swing.EmptyBorder(5, 5, 5, 5)
         )
-  }
-  
-  val patternPanel = new BoxPanel(Orientation.Vertical) {
-    contents += patternLabel1
-    contents += patternLabel2
-    xLayoutAlignment =  java.awt.Component.LEFT_ALIGNMENT
-    contents += patternList
-  }
 
-  val resultPanel = new GridPanel(0,1) {
-    contents += resultLabel
-    contents += result
-    xLayoutAlignment = java.awt.Component.LEFT_ALIGNMENT
-  }
-  
-  contents += patternPanel
-  contents += resultPanel
-  border = Swing.EmptyBorder(10,10,10,10)
-  reformat()
-  
-  listenTo(patternList.selection)
-  reactions += {
-    case SelectionChanged(`patternList`) => reformat()
-  }
-  
-  def reformat(): Unit = {
-    Try {
-      val today = new Date()
-      val formatter = new SimpleDateFormat(patternList.selection.item)
-      formatter.format(today)
-    } match {
-      case Success( dateString) =>
-        result.foreground = Color.black
-        result.text = dateString
-      case Failure( err ) =>
-        result.text = s"Error: ${err.getMessage}"
+    val patternPanel = new BoxPanel(Orientation.Vertical):
+        contents += patternLabel1
+        contents += patternLabel2
+        xLayoutAlignment = java.awt.Component.LEFT_ALIGNMENT
+        contents += patternList
+
+    val resultPanel = new GridPanel(0, 1):
+        contents += resultLabel
+        contents += result
+        xLayoutAlignment = java.awt.Component.LEFT_ALIGNMENT
+
+    contents += patternPanel
+    contents += resultPanel
+    border = Swing.EmptyBorder(10, 10, 10, 10)
+    reformat()
+
+    listenTo(patternList.selection)
+    reactions += {
+        case SelectionChanged(`patternList`) => reformat()
     }
-  }
-}
 
-object ComboBoxDemo2 extends SimpleSwingApplication {
-  lazy val top = new MainFrame() {
-    title = "ComboBoxDemo2"
-    //Create and set up the content pane.
-    contents = new ComboBoxDemo2()
-  }
-}
+    def reformat(): Unit =
+        Try {
+            val today     = new Date()
+            val formatter = new SimpleDateFormat(patternList.selection.item)
+            formatter.format(today)
+        } match
+            case Success(dateString) =>
+                result.foreground = Color.black
+                result.text = dateString
+            case Failure(err) =>
+                result.text = s"Error: ${err.getMessage}"
+end ComboBoxDemo2
+
+object ComboBoxDemo2 extends SimpleSwingApplication:
+    lazy val top = new MainFrame():
+        title = "ComboBoxDemo2"
+        // Create and set up the content pane.
+        contents = new ComboBoxDemo2()
+end ComboBoxDemo2

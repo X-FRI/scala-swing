@@ -31,8 +31,8 @@
 
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
-import scala.swing.event.{ ButtonClicked, EditDone, SelectionChanged, ValueChanged }
+import scala.swing.*
+import scala.swing.event.{ButtonClicked, EditDone, SelectionChanged, ValueChanged}
 import java.awt.Toolkit
 
 /**
@@ -44,122 +44,118 @@ import java.awt.Toolkit
  *
  * ListDemo.scala requires no other files.
  */
-class ListDemo extends BorderPanel {
+class ListDemo extends BorderPanel:
 
-  private val listModel: Array[String] = Array("Jane Doe", "John Smith", "Kathy Green")
+    private val listModel: Array[String] = Array("Jane Doe", "John Smith", "Kathy Green")
 
-  //Create the list and put it in a scroll pane.
-  private val initiallySelected = 0
-  private val listMe: ListView[String] = new ListView[String](listModel) {
-    selection.intervalMode = ListView.IntervalMode.Single
-    selectIndices(initiallySelected)
-    visibleRowCount = 5
-  }
+    // Create the list and put it in a scroll pane.
+    private val initiallySelected = 0
+    private val listMe: ListView[String] = new ListView[String](listModel):
+        selection.intervalMode = ListView.IntervalMode.Single
+        selectIndices(initiallySelected)
+        visibleRowCount = 5
 
-  val listScrollPane: ScrollPane = new ScrollPane(listMe)
+    val listScrollPane: ScrollPane = new ScrollPane(listMe)
 
-  val hireButton: Button = new Button("Hire") {
-    enabled = false
+    val hireButton: Button = new Button("Hire"):
+        enabled = false
+        reactions += {
+            case ButtonClicked(_) => hireListenerMethod()
+        }
+
+    val fireButton: Button = new Button("Fire"):
+        reactions += {
+            case ButtonClicked(_) => fireListenerMethod()
+        }
+
+    val employeeName: TextField = new TextField(10)
+    // employeeName.peer.getDocument().addDocumentListener(hireListener);
+    val nameSelected: String = listModel(initiallySelected)
+
+    // Create a panel that uses BoxLayout.
+    val buttonPane: BoxPanel = new BoxPanel(Orientation.Horizontal):
+        border = Swing.EmptyBorder(5, 5, 5, 5)
+        contents += fireButton
+        contents += Swing.HStrut(5)
+        contents += fireButton
+        contents += Swing.HStrut(5)
+        contents += new Separator()
+        contents += Swing.HStrut(5)
+        contents += employeeName
+        contents += hireButton
+
+    layout(listScrollPane) = BorderPanel.Position.Center
+    layout(buttonPane) = BorderPanel.Position.South
+
+    listenTo(listMe.selection)
+    listenTo(employeeName)
+
     reactions += {
-      case ButtonClicked(_) => hireListenerMethod()
+        case EditDone(`employeeName`) =>
+            hireListenerMethod()
+        case SelectionChanged(`listMe`) =>
+            fireButton.enabled = listMe.selection.leadIndex >= 0
+        case ValueChanged(`employeeName`) =>
+            hireButton.enabled = employeeName.text.trim().length > 0
     }
-  }
 
-  val fireButton: Button = new Button("Fire") {
-    reactions += {
-      case ButtonClicked(_) => fireListenerMethod()
-    }
-  }
+    // This method tests for string equality. You could certainly
+    // get more sophisticated about the algorithm.  For example,
+    // you might want to ignore white space and capitalization.
+    def alreadyInList(name: String): Boolean = listMe.listData.contains(name)
 
-  val employeeName: TextField = new TextField(10)
-  // employeeName.peer.getDocument().addDocumentListener(hireListener);
-  val nameSelected: String = listModel(initiallySelected)
+    def fireListenerMethod(): Unit =
+        // This method can be called only if
+        // there's a valid selection
+        // so go ahead and remove whatever's selected.
+        var index: Int = listMe.selection.leadIndex
+        val (x, y)     = listMe.listData.splitAt(index)
+        listMe.listData = x ++ y.tail
 
-  //Create a panel that uses BoxLayout.
-  val buttonPane: BoxPanel = new BoxPanel(Orientation.Horizontal) {
-    border = Swing.EmptyBorder(5, 5, 5, 5)
-    contents += fireButton
-    contents += Swing.HStrut(5)
-    contents += fireButton
-    contents += Swing.HStrut(5)
-    contents += new Separator()
-    contents += Swing.HStrut(5)
-    contents += employeeName
-    contents += hireButton
-  }
+        val size: Int = listMe.listData.size
 
-  layout(listScrollPane) = BorderPanel.Position.Center
-  layout(buttonPane) = BorderPanel.Position.South
+        if size == 0 then // Nobody's left, disable firing.
+            fireButton.enabled = false
+        else { // Select an index.
+            if index == size then
+                // removed item in last position
+                index -= 1
+            listMe.selectIndices(index)
+            listMe.ensureIndexIsVisible(index)
+        }
+        end if
+    end fireListenerMethod
+    def hireListenerMethod(): Unit =
+        val nameSelected: String = employeeName.text
+        // User didn't type in a unique name...
+        if nameSelected.equals("") || alreadyInList(nameSelected) then
+            Toolkit.getDefaultToolkit.beep()
+            employeeName.requestFocusInWindow()
+            employeeName.selectAll()
+        else {
+            val index: Int = listMe.selection.leadIndex + 1 // get selected index
 
-  listenTo(listMe.selection)
-  listenTo(employeeName)
+            val (x: Seq[String], y: Seq[String]) = listMe.listData.splitAt(index)
+            val z                                = employeeName.text +: y
+            listMe.listData = x ++ z
+            // If we just wanted to add to the end, we'd do this:
+            // listModel.listData += employeeName.text;
 
-  reactions += {
-    case EditDone(`employeeName`) =>
-      hireListenerMethod()
-    case SelectionChanged(`listMe`) =>
-      fireButton.enabled = listMe.selection.leadIndex >= 0
-    case ValueChanged(`employeeName`) =>
-      hireButton.enabled = employeeName.text.trim().length > 0
-  }
+            // Reset the text field.
+            employeeName.requestFocusInWindow()
+            employeeName.text = ""
 
-  //This method tests for string equality. You could certainly
-  //get more sophisticated about the algorithm.  For example,
-  //you might want to ignore white space and capitalization.
-  def alreadyInList(name: String): Boolean = listMe.listData.contains(name)
+            // Select the new item and make it visible.
+            listMe.selectIndices(index)
+            listMe.ensureIndexIsVisible(index)
+        }
+        end if
+    end hireListenerMethod
+end ListDemo
 
-  def fireListenerMethod(): Unit = {
-    //This method can be called only if
-    //there's a valid selection
-    //so go ahead and remove whatever's selected.
-    var index: Int = listMe.selection.leadIndex
-    val (x, y) = listMe.listData.splitAt(index)
-    listMe.listData = x ++ y.tail
-
-    val size: Int = listMe.listData.size
-
-    if (size == 0) { //Nobody's left, disable firing.
-      fireButton.enabled = false
-    } else { //Select an index.
-      if (index == size) {
-        //removed item in last position
-        index -= 1
-      }
-      listMe.selectIndices(index)
-      listMe.ensureIndexIsVisible(index)
-    }
-  }
-  def hireListenerMethod(): Unit = {
-    val nameSelected: String = employeeName.text
-    //User didn't type in a unique name...
-    if (nameSelected.equals("") || alreadyInList(nameSelected)) {
-      Toolkit.getDefaultToolkit.beep()
-      employeeName.requestFocusInWindow()
-      employeeName.selectAll()
-    } else {
-      val index: Int = listMe.selection.leadIndex + 1 //get selected index
-
-      val (x: Seq[String], y: Seq[String]) = listMe.listData.splitAt(index)
-      val z = employeeName.text +: y
-      listMe.listData = x ++ z
-      //If we just wanted to add to the end, we'd do this:
-      //listModel.listData += employeeName.text;
-
-      //Reset the text field.
-      employeeName.requestFocusInWindow()
-      employeeName.text = ""
-
-      //Select the new item and make it visible.
-      listMe.selectIndices(index)
-      listMe.ensureIndexIsVisible(index)
-    }
-  }
-}
-
-object ListDemo extends SimpleSwingApplication {
-  lazy val top: Frame = new MainFrame() {
-    title = "ListDemo"
-    //Create and set up the content pane.
-    contents = new ListDemo()
-  }
-}
+object ListDemo extends SimpleSwingApplication:
+    lazy val top: Frame = new MainFrame():
+        title = "ListDemo"
+        // Create and set up the content pane.
+        contents = new ListDemo()
+end ListDemo

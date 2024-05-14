@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
  *
@@ -31,7 +30,7 @@
  */
 package scala.swing.examples.tutorials.components
 
-import scala.swing._
+import scala.swing.*
 
 /**
  * Tutorial: How to Use Menus
@@ -45,31 +44,25 @@ import scala.swing._
  * @author ges
  * @author kwalrath
  */
-class MenuGlueDemo extends MainFrame {
-  def createMenuBar(): MenuBar = {
-    new MenuBar() {
-      contents += createMenu("Menu 1")
-      contents += createMenu("Menu 2")
-      contents += Swing.HGlue
-      contents += createMenu("Menu 3")
-    }
-  }
+class MenuGlueDemo extends MainFrame:
+    def createMenuBar(): MenuBar =
+        new MenuBar():
+            contents += createMenu("Menu 1")
+            contents += createMenu("Menu 2")
+            contents += Swing.HGlue
+            contents += createMenu("Menu 3")
 
-  def createMenu(title: String): Menu = {
-    new Menu(title) {
-      contents += new MenuItem(s"Menu item #1 in $title")
-      contents += new MenuItem(s"Menu item #2 in $title")
-      contents += new MenuItem(s"Menu item #3 in $title")
-    }
-  }
-}
+    def createMenu(title: String): Menu =
+        new Menu(title):
+            contents += new MenuItem(s"Menu item #1 in $title")
+            contents += new MenuItem(s"Menu item #2 in $title")
+            contents += new MenuItem(s"Menu item #3 in $title")
+end MenuGlueDemo
 
-object MenuGlueDemo extends SimpleSwingApplication {
-  lazy val top = new MenuGlueDemo() {
-    title = "MenuGlueDemo"
-    contents = new FlowPanel() {
-      contents += createMenuBar()
-    }
-    size = new Dimension(300, 100)
-  }
-}
+object MenuGlueDemo extends SimpleSwingApplication:
+    lazy val top = new MenuGlueDemo():
+        title = "MenuGlueDemo"
+        contents = new FlowPanel():
+            contents += createMenuBar()
+        size = new Dimension(300, 100)
+end MenuGlueDemo
