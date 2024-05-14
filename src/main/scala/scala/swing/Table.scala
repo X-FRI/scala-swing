@@ -70,10 +70,9 @@ object Table:
             if isSelected then
                 component.background = table.selectionBackground
                 component.foreground = table.selectionForeground
-            else {
+            else
                 component.background = table.background
                 component.foreground = table.foreground
-            }
 
         /**
      * Configuration that is specific to the component and this renderer.

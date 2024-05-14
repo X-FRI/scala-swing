@@ -88,10 +88,9 @@ class SplitPaneDemo2 extends MainFrame:
             if !theList.selection.adjusting then
                 if theList.selection.leadIndex < 0 then
                     label.text = "Nothing selected."
-            else {
+            else
                 val index = theList.selection.leadIndex
                 label.text = s"Selected image number $index"
-            }
             end if
     }
 end SplitPaneDemo2
@@ -143,10 +142,9 @@ class SplitPaneDemo extends FlowPanel:
         if icon.isDefined then
             picture.text = null
             picture.icon = icon.get
-        else {
+        else
             picture.text = "Image not found"
             picture.icon = null
-        }
         end if
     end updateLabel
 end SplitPaneDemo

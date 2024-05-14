@@ -108,7 +108,7 @@ class IntegerEditor(min: Int, max: Int) extends DefaultCellEditor(new JFormatted
             o
         else if o.isInstanceOf[Number] then
             new java.lang.Integer(o.asInstanceOf[Number].intValue())
-        else {
+        else
             if DEBUG then
                 println("getCellEditorValue: o isn't a Number")
             try
@@ -118,7 +118,6 @@ class IntegerEditor(min: Int, max: Int) extends DefaultCellEditor(new JFormatted
                     System.err.println("getCellEditorValue: can't parse o: " + o)
                     null
             end try
-        }
         end if
     end getCellEditorValue
 

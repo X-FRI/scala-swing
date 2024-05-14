@@ -27,10 +27,9 @@ trait RootPanel extends Container:
    */
     def contents: immutable.Seq[Component] =
         if peer.getContentPane.getComponentCount == 0 then Nil
-        else {
+        else
             val c = peer.getContentPane.getComponent(0).asInstanceOf[javax.swing.JComponent]
             List(UIElement.cachedWrapper[Component](c))
-        }
 
     def contents_=(c: Component): Unit =
         if peer.getContentPane.getComponentCount > 0 then

@@ -65,7 +65,6 @@ class BoxLayoutDemo2 extends BorderPanel:
             shortSideSize, restrictSize, sizeIsRandom, i.toString)
         panel.contents += bldComponent(i).asInstanceOf[Component]
     end for
-
     // Create the instructions.
     val label = new Label("Click a rectangle to change its X alignment.")
     val cb = new CheckBox("Restrict maximum rectangle size."):

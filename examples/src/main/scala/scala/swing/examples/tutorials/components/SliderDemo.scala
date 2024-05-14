@@ -105,12 +105,11 @@ class SliderDemo(window: Window) extends BoxPanel(Orientation.Vertical) with Act
                 val fps: Int = framesPerSecond.value
                 if fps == 0 then
                     if !frozen then stopAnimation()
-                else {
+                else
                     delay = 1000 / fps
                     timer.setDelay(delay)
                     timer.setInitialDelay(delay * 10)
                     if frozen then startAnimation()
-                }
                 end if
         case WindowIconified(`window`)   => stopAnimation()
         case WindowDeiconified(`window`) => startAnimation()

@@ -116,13 +116,12 @@ class ListDemo extends BorderPanel:
 
         if size == 0 then // Nobody's left, disable firing.
             fireButton.enabled = false
-        else { // Select an index.
+        else // Select an index.
             if index == size then
                 // removed item in last position
                 index -= 1
             listMe.selectIndices(index)
             listMe.ensureIndexIsVisible(index)
-        }
         end if
     end fireListenerMethod
     def hireListenerMethod(): Unit =
@@ -132,7 +131,7 @@ class ListDemo extends BorderPanel:
             Toolkit.getDefaultToolkit.beep()
             employeeName.requestFocusInWindow()
             employeeName.selectAll()
-        else {
+        else
             val index: Int = listMe.selection.leadIndex + 1 // get selected index
 
             val (x: Seq[String], y: Seq[String]) = listMe.listData.splitAt(index)
@@ -148,7 +147,6 @@ class ListDemo extends BorderPanel:
             // Select the new item and make it visible.
             listMe.selectIndices(index)
             listMe.ensureIndexIsVisible(index)
-        }
         end if
     end hireListenerMethod
 end ListDemo

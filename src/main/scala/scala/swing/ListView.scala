@@ -102,10 +102,9 @@ object ListView:
             if isSelected then
                 component.background = list.selectionBackground
                 component.foreground = list.selectionForeground
-            else {
+            else
                 component.background = list.background
                 component.foreground = list.foreground
-            }
 
         /**
      * Configuration that is specific to the component and this renderer.
